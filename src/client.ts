@@ -49,6 +49,7 @@ export class ServiceNowClient {
       table: ServiceNowTable.USER,
       limit: 1,
     });
+
     try {
       await this.request({ url });
     } catch (err) {
