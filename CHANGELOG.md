@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## v0.3.0 - 2022-07-12
+
+### Updated
+
+- Updated SDK dependencies to 8.19.0.
+
 ## v0.2.0 - 2021-02-11
 
 ### Updated
