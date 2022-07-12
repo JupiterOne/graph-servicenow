@@ -15,7 +15,7 @@ test('createAccountEntity', () => {
   const accountEntity = createAccountEntity(hostname);
 
   expect(accountEntity).toMatchGraphObjectSchema({
-    _class: Entities.ACCOUNT._class,
+    _class: [Entities.ACCOUNT._class],
     schema: {},
   });
   expect(accountEntity).toMatchSnapshot();
@@ -96,7 +96,7 @@ test('createUserEntity', () => {
   const userEntity = createUserEntity(user);
 
   expect(userEntity).toMatchGraphObjectSchema({
-    _class: Entities.USER._class,
+    _class: [Entities.USER._class],
     schema: {},
   });
   expect(userEntity).toMatchSnapshot();
@@ -135,7 +135,7 @@ test('createGroupEntity', () => {
   const groupEntity = createGroupEntity(group);
 
   expect(groupEntity).toMatchGraphObjectSchema({
-    _class: Entities.GROUP._class,
+    _class: [Entities.GROUP._class],
     schema: {},
   });
   expect(groupEntity).toMatchSnapshot();
@@ -309,7 +309,7 @@ describe('incident', () => {
   test('createIncidentEntity', () => {
     const incidentEntity = createIncidentEntity(incident);
     expect(incidentEntity).toMatchGraphObjectSchema({
-      _class: Entities.INCIDENT._class,
+      _class: [Entities.INCIDENT._class],
     });
     expect(incidentEntity).toMatchSnapshot();
   });

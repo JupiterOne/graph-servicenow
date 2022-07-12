@@ -5,7 +5,7 @@ import { createMockExecutionContext } from '@jupiterone/integration-sdk-testing'
 import { IntegrationConfig } from './types';
 
 const context = createMockExecutionContext<IntegrationConfig>({
-  instanceConfig: createTestConfig('dev94579.service-now.com'),
+  instanceConfig: createTestConfig('dev128112.service-now.com'),
 });
 
 jest.setTimeout(10000);

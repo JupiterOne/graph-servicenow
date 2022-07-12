@@ -68,7 +68,7 @@ describe('recordings', () => {
 
     const executionContext = createMockExecutionContext<IntegrationConfig>({
       instanceConfig: {
-        hostname: process.env.HOSTNAME || 'dev94579.service-now.com',
+        hostname: process.env.HOSTNAME || 'dev128112.service-now.com',
         username: process.env.USERNAME || 'valid_username',
         password: process.env.PASSWORD || 'valid_password',
       },

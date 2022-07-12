@@ -16,7 +16,7 @@ import { setupServiceNowRecording } from '../../test/util/recording';
 import { Steps, Entities } from '../constants';
 import { createAccountEntity } from './converters';
 
-const config = createTestConfig('dev94579.service-now.com');
+const config = createTestConfig('dev128112.service-now.com');
 
 const mockGetData = jest.fn().mockImplementation(
   // eslint-disable-next-line @typescript-eslint/require-await
@@ -46,7 +46,7 @@ test('step - account', async () => {
 
   expect(context.jobState.collectedEntities.length).toEqual(1);
   expect(context.jobState.collectedEntities).toMatchGraphObjectSchema({
-    _class: Entities.ACCOUNT._class,
+    _class: [Entities.ACCOUNT._class],
     schema: {},
   });
 
@@ -67,7 +67,7 @@ test('step - users', async () => {
 
   expect(context.jobState.collectedEntities.length).toBeGreaterThan(0);
   expect(context.jobState.collectedEntities).toMatchGraphObjectSchema({
-    _class: Entities.USER._class,
+    _class: [Entities.USER._class],
     schema: {},
   });
 
@@ -91,7 +91,7 @@ test('step - groups', async () => {
 
   expect(context.jobState.collectedEntities.length).toBeGreaterThan(0);
   expect(context.jobState.collectedEntities).toMatchGraphObjectSchema({
-    _class: Entities.GROUP._class,
+    _class: [Entities.GROUP._class],
     schema: {},
   });
 
@@ -134,7 +134,7 @@ test('step - incidents', async () => {
   const { collectedEntities, collectedRelationships } = context.jobState;
   expect(collectedEntities.length).toBeGreaterThan(0);
   expect(collectedEntities).toMatchGraphObjectSchema({
-    _class: Entities.INCIDENT._class,
+    _class: [Entities.INCIDENT._class],
   });
 
   expect(collectedRelationships.length).toBeGreaterThan(0);

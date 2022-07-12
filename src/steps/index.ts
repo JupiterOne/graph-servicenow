@@ -36,7 +36,9 @@ export async function fetchUsers(
 
   const client = new ServiceNowClient(instance.config, logger);
 
-  const accountEntity = await jobState.getData<Entity>(Entities.ACCOUNT._type);
+  const accountEntity = (await jobState.getData(
+    Entities.ACCOUNT._type,
+  )) as Entity;
 
   await client.iterateUsers(async (user) => {
     const userEntity = await jobState.addEntity(createUserEntity(user));
@@ -58,7 +60,9 @@ export async function fetchGroups(
 
   const client = new ServiceNowClient(instance.config, logger);
 
-  const accountEntity = await jobState.getData<Entity>(Entities.ACCOUNT._type);
+  const accountEntity = (await jobState.getData(
+    Entities.ACCOUNT._type,
+  )) as Entity;
 
   await client.iterateGroups(async (group) => {
     const groupEntity = await jobState.addEntity(createGroupEntity(group));
