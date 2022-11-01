@@ -16,6 +16,7 @@ import {
   createAccountEntity,
   createIncidentEntity,
   createIncidentAssigneeRelationship,
+  getUserKey,
 } from './converters';
 
 export async function createAccount(

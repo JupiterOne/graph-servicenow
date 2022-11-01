@@ -68,8 +68,8 @@ describe('recordings', () => {
 
     const executionContext = createMockExecutionContext<IntegrationConfig>({
       instanceConfig: {
-        hostname: process.env.HOSTNAME || 'dev128112.service-now.com',
-        username: process.env.USERNAME || 'valid_username',
+        hostname: process.env.HOSTNAME || 'dev000000.service-now.com',
+        username: process.env.USERID || 'valid_username',
         password: process.env.PASSWORD || 'valid_password',
       },
     });
@@ -97,8 +97,8 @@ describe('recordings', () => {
 
     const executionContext = createMockExecutionContext<IntegrationConfig>({
       instanceConfig: {
-        hostname: process.env.HOSTNAME || 'dev94579.service-now.com',
-        username: process.env.USERNAME || 'valid_username',
+        hostname: process.env.HOSTNAME || 'dev000000.service-now.com',
+        username: process.env.USERID || 'valid_username',
         password: process.env.PASSWORD || 'valid_password',
       },
     });

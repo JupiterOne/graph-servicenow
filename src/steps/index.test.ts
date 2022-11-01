@@ -75,7 +75,7 @@ test('step - users', async () => {
   expect(
     context.jobState.collectedRelationships,
   ).toMatchDirectRelationshipSchema({});
-});
+}, 10000);
 
 test('step - groups', async () => {
   recording = setupServiceNowRecording({
