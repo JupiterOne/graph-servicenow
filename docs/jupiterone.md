@@ -1,6 +1,24 @@
-# Integration with JupiterOne
+# ServiceNow
 
-## Setup
+## Integration Benefits
+- Visualize your ServiceNow account, incidents, users, and usergroups in your JupiterOne account.
+- See the relationships between your account and users or usergroups, usergroups and other usergroups or users, and incidents and users.
+- Monitor changes to these ServiceNow entities using JupiterOne Alerts.
+- Query for users in JupiterOne that have access to ServiceNow and that incidents they have been assigned.
+
+## How it Works
+- JupiterOne periodically fetches account, incidents, users and usergroups from ServiceNow to update the graph. 
+- Write JupiterOne queries to review and monitor updates to the graph, or
+  leverage existing queries.
+- Configure alerts to take action when JupiterOne graph changes, or leverage
+  existing alerts.
+  
+## Support
+
+If you need help with this integration, contact
+[JupiterOne Support](https://support.jupiterone.io).
+
+## Prerequisites
 
 The JupiterOne ServiceNow integration is configured using your target ServiceNow
 implementation's `hostname`, such as `my-company.service-now.com`.
@@ -53,6 +71,28 @@ and assigning that read-only role to a dedicated ServiceNow user.
 
    **4. Role Assignment**: Assign `jupiterone_incident_creator` role to
    `JupiterOne` user
+   
+## In JupiterOne
+1. From the top navigation of the J1 Search homepage, select **Integrations**.
+2. Scroll down to **ServiceNow** and click it.
+3. Click **Add Instance** and configure the following settings:
+  - Enter the Account Name by which you want to identify this ServiceNow account.
+  - Enter a Description to help your team identify the integration.
+  - Select a Polling Interval that is sufficient for your monitoring requirements. You can leave this as `DISABLED` and manually execute the integration.
+  - Enter the Hostname of your ServiceNow instance, e.g. j1.service-now.com.
+  - Enter the Username.
+  - Enter the password.
+  - Enable **Add AccountName Tag** to store the Account Name entered above in the tags of the ingested assets.
+  - Enable **Add Production Tag** to store the value Production in the tags of the ingested assets.
+  - Optionally add additional custom tags to be stored on the entities of this instance.
+4. Click **Create** after you have entered all the values.
+
+## How to Uninstall
+1. From the top navigation of the J1 Search homepage, select **Integrations**.
+2. Scroll down to **ServiceNow** and click it.
+3. Identify and click the **integration to delete**.
+4. Click the Delete button.
+5. Click **Yes, Delete** to confirm the deletion.
 
 <!-- {J1_DOCUMENTATION_MARKER_START} -->
 <!--
