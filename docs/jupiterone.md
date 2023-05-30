@@ -125,12 +125,13 @@ https://github.com/JupiterOne/sdk/blob/main/docs/integrations/development.md
 
 The following entities are created:
 
-| Resources  | Entity `_type`         | Entity `_class` |
-| ---------- | ---------------------- | --------------- |
-| Account    | `service_now_account`  | `Account`       |
-| Incident   | `service_now_incident` | `Incident`      |
-| User       | `service_now_user`     | `User`          |
-| User Group | `service_now_group`    | `UserGroup`     |
+| Resources   | Entity `_type`            | Entity `_class` |
+| ----------- | ------------------------- | --------------- |
+| Account     | `service_now_account`     | `Account`       |
+| CMDB Object | `service_now_cmdb_object` | `Configuration` |
+| Incident    | `service_now_incident`    | `Incident`      |
+| User        | `service_now_user`        | `User`          |
+| User Group  | `service_now_group`       | `UserGroup`     |
 
 ### Relationships
 

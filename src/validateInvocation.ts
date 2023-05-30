@@ -10,7 +10,6 @@ export default async function validateInvocation(
   context: IntegrationExecutionContext<IntegrationConfig>,
 ) {
   const { config } = context.instance;
-
   if (!config.hostname || !config.username || !config.password) {
     throw new IntegrationValidationError(
       'Config requires all of {hostname, username, password}',

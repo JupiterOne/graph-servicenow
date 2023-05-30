@@ -17,6 +17,22 @@ export enum ServiceNowTable {
   DATABASE_TABLES = 'sys_db_object',
   GROUP_MEMBER = 'sys_user_grmember',
   INCIDENT = 'incident',
+  //  //DEVICES
+  // COMPUTER = 'cmdb_ci_computer',
+  // SERVER = 'cmdb_ci_server',
+  // VM = 'cmdb_ci_vm',
+  // VM_INSTANCE = 'cmdb_ci_vm_instance',
+  // PRINTER = 'cmdb_ci_printer',
+  // NETGEAR = 'cmdb_ci_netgear',
+  // COMM = 'cmdb_ci_comm',
+  // CLUSTER = 'cmdb_ci_cluster',
+  // CLUSTER_VIP = 'cmdb_ci_cluster_vip',
+  // FACILITY_HARDWARE = 'cmdb_ci_facility_hardware',
+  // MSD = 'cmdb_ci_msd',
+  // VPN = 'cmdb_ci_vpn',
+  // CI = 'cmdb_ci',
+  // linux_server = 'cmdb_ci_linux_server',
+  sys_dictionary = 'sys_db_object',
 }
 
 const DEFAULT_RESPONSE_LIMIT = 100;
@@ -75,11 +91,19 @@ export class ServiceNowClient {
   }
 
   private createRequestUrl(options: {
-    table: ServiceNowTable;
+    table: string;
     limit?: number;
+    query?: { [key: string]: string };
   }) {
     const limit = options.limit || this.limit;
-    return `https://${this.hostname}/api/now/table/${options.table}?sysparm_limit=${limit}`;
+    let query = '';
+    if (options.query)
+      [
+        Object.entries(options.query).forEach(
+          (item) => (query += `&${item[0]}=${item[1]}`),
+        ),
+      ];
+    return `https://${this.hostname}/api/now/table/${options.table}?sysparm_limit=${limit}${query}`;
   }
 
   private async request(options: { url: string }) {
@@ -94,7 +118,7 @@ export class ServiceNowClient {
     });
   }
 
-  private async retryResourceRequest(
+  async retryResourceRequest(
     url: string,
   ): Promise<object[] & { nextLink: string | undefined }> {
     return retry(
@@ -110,12 +134,13 @@ export class ServiceNowClient {
     );
   }
 
-  private async iterateTableResources(options: {
-    table: ServiceNowTable;
+  async iterateTableResources(options: {
+    table: string;
     callback: Iteratee;
+    query?: { [key: string]: string };
   }) {
-    const { table, callback } = options;
-    let url: string | undefined = this.createRequestUrl({ table });
+    const { table, callback, query } = options;
+    let url: string | undefined = this.createRequestUrl({ table, query });
     do {
       const resources = await this.retryResourceRequest(url);
 
@@ -161,7 +186,13 @@ export class ServiceNowClient {
       callback,
     });
   }
-
+  // async iterateComputers(callback: Iteratee) {
+  //   return this.iterateTableResources({
+  //     table: ServiceNowTable.sys_dictionary,
+  //     callback,
+  //     query:{'name':'cmdb_ci_server'}
+  //   });
+  // }
   async listTableNames(tableNamePrefix: string = ''): Promise<string[]> {
     const tableNames: string[] = [];
     await this.iterateTableResources({

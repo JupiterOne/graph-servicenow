@@ -33,6 +33,7 @@ test('Should throw if invalid hostname', async () => {
       hostname: 'invalid.service-now.com',
       username: 'invalid',
       password: 'invalid',
+      cmdb_parent: 'invalid',
     },
   });
 
@@ -71,6 +72,7 @@ describe('recordings', () => {
         hostname: process.env.HOSTNAME || 'dev128112.service-now.com',
         username: process.env.USERNAME || 'valid_username',
         password: process.env.PASSWORD || 'valid_password',
+        cmdb_parent: process.env.CMDB_PARENT || 'valid_cmdb_parent',
       },
     });
     const hostname = executionContext.instance.config.hostname;
@@ -100,6 +102,7 @@ describe('recordings', () => {
         hostname: process.env.HOSTNAME || 'dev94579.service-now.com',
         username: process.env.USERNAME || 'valid_username',
         password: process.env.PASSWORD || 'valid_password',
+        cmdb_parent: process.env.CMDB_PARENT || 'valid_cmdb_parent',
       },
     });
 

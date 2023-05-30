@@ -4,6 +4,9 @@ const instanceConfigFields: IntegrationInstanceConfigFieldMap = {
   hostname: {
     type: 'string',
   },
+  cmdb_parent: {
+    type: 'string',
+  },
   username: {
     type: 'string',
   },

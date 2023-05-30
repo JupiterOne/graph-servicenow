@@ -6,6 +6,7 @@ export const Steps = {
   GROUPS: 'step-groups',
   GROUP_MEMBERS: 'step-group-members',
   INCIDENTS: 'step-incidents',
+  CMDB: 'step-cmdb',
 };
 
 export const Entities = {
@@ -28,6 +29,12 @@ export const Entities = {
     resourceName: 'Incident',
     _type: 'service_now_incident',
     _class: 'Incident',
+  },
+  CMDB_OBJECT: {
+    resourceName: 'CMDB Object',
+    _type: 'service_now_cmdb_object',
+    _class: 'Configuration',
+    disableClassMatch: true,
   },
 };
 
