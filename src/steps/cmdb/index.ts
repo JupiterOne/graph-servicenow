@@ -1,10 +1,13 @@
 import {
   IntegrationStepExecutionContext,
+  RelationshipClass,
   Step,
+  createDirectRelationship,
+  getRawData,
 } from '@jupiterone/integration-sdk-core';
 import { CMDBItem, DictionaryItem, IntegrationConfig } from '../../types';
 import { ServiceNowClient, ServiceNowTable } from '../../client';
-import { Entities, Steps } from '../../constants';
+import { Entities, Relationships, Steps } from '../../constants';
 import { createCMDBEntity } from './converters';
 let SysClassNamesParents: {
   [key: string]: string;
@@ -17,6 +20,7 @@ export async function fetchCMDB(
   SysClassNamesParents = {};
   await client.iterateTableResources({
     table: instance.config.cmdb_parent,
+    limit: 400,
     callback: async (resource: CMDBItem) => {
       const sysClassNames = [
         resource.sys_class_name,
@@ -26,7 +30,106 @@ export async function fetchCMDB(
     },
   });
 }
-
+export async function buildUserManagesCMDB(
+  context: IntegrationStepExecutionContext<IntegrationConfig>,
+) {
+  const { jobState } = context;
+  await jobState.iterateEntities(
+    { _type: Entities.CMDB_OBJECT._type },
+    async (cmdbEntity) => {
+      const cmdb = getRawData<CMDBItem>(cmdbEntity);
+      const userId = cmdb?.managed_by;
+      if (!userId) {
+        return;
+      }
+      const userEntity = await jobState.findEntity(userId);
+      if (userEntity) {
+        await jobState.addRelationship(
+          createDirectRelationship({
+            _class: RelationshipClass.MANAGES,
+            from: userEntity,
+            to: cmdbEntity,
+          }),
+        );
+      }
+    },
+  );
+}
+export async function buildUserOwnsCMDB(
+  context: IntegrationStepExecutionContext<IntegrationConfig>,
+) {
+  const { jobState } = context;
+  await jobState.iterateEntities(
+    { _type: Entities.CMDB_OBJECT._type },
+    async (cmdbEntity) => {
+      const cmdb = getRawData<CMDBItem>(cmdbEntity);
+      const userId = cmdb?.owned_by;
+      if (!userId) {
+        return;
+      }
+      const userEntity = await jobState.findEntity(userId);
+      if (userEntity) {
+        await jobState.addRelationship(
+          createDirectRelationship({
+            _class: RelationshipClass.OWNS,
+            from: userEntity,
+            to: cmdbEntity,
+          }),
+        );
+      }
+    },
+  );
+}
+export async function buildGroupManagesCMDB(
+  context: IntegrationStepExecutionContext<IntegrationConfig>,
+) {
+  const { jobState } = context;
+  await jobState.iterateEntities(
+    { _type: Entities.CMDB_OBJECT._type },
+    async (cmdbEntity) => {
+      const cmdb = getRawData<CMDBItem>(cmdbEntity);
+      const groupId = cmdb?.managed_by_group;
+      if (!groupId) {
+        return;
+      }
+      const groupEntity = await jobState.findEntity(groupId);
+      if (groupEntity) {
+        await jobState.addRelationship(
+          createDirectRelationship({
+            _class: RelationshipClass.MANAGES,
+            from: groupEntity,
+            to: cmdbEntity,
+          }),
+        );
+      }
+    },
+  );
+}
+export async function buildCMDBAssignedUser(
+  context: IntegrationStepExecutionContext<IntegrationConfig>,
+) {
+  const { jobState } = context;
+  await jobState.iterateEntities(
+    { _type: Entities.CMDB_OBJECT._type },
+    async (cmdbEntity) => {
+      const cmdb = getRawData<CMDBItem>(cmdbEntity);
+      const userId = cmdb?.assigned_to.value;
+      if (!userId) {
+        return;
+      }
+      const userEntity = await jobState.findEntity(userId);
+      if (userEntity) {
+        await jobState.addRelationship(
+          createDirectRelationship({
+            _class: RelationshipClass.ASSIGNED,
+            from: cmdbEntity,
+            to: userEntity,
+          }),
+        );
+      }
+    },
+  );
+}
 async function getAllParents(
   client: ServiceNowClient,
   sysClassName: string,
@@ -56,10 +159,42 @@ export const cmdbIntegrationSteps: Step<
 >[] = [
   {
     id: Steps.CMDB,
-    name: 'CMDB Devices',
+    name: 'Fetch CMDB Configuration Items',
     entities: [Entities.CMDB_OBJECT],
     relationships: [],
     dependsOn: [],
     executionHandler: fetchCMDB,
+  },
+  {
+    id: Steps.USER_MANAGES_CMDB,
+    name: 'Build user manages CMDB',
+    entities: [],
+    relationships: [Relationships.USER_MANAGES_CMDB],
+    dependsOn: [Steps.CMDB, Steps.USERS],
+    executionHandler: buildUserManagesCMDB,
+  },
+  {
+    id: Steps.USER_OWNS_CMDB,
+    name: 'Build user owns CMDB',
+    entities: [],
+    relationships: [Relationships.USER_OWNS_CMDB],
+    dependsOn: [Steps.CMDB, Steps.USERS],
+    executionHandler: buildUserOwnsCMDB,
+  },
+  {
+    id: Steps.CMDB_ASSIGNED_USER,
+    name: 'CMDB assigned to user',
+    entities: [],
+    relationships: [Relationships.CMDB_ASSIGNED_TO_USER],
+    dependsOn: [Steps.CMDB, Steps.USERS],
+    executionHandler: buildCMDBAssignedUser,
+  },
+  {
+    id: Steps.GROUP_MANAGES_CMDB,
+    name: 'Group manages CMDB',
+    entities: [],
+    relationships: [Relationships.GROUP_MANAGES_CMDB],
+    dependsOn: [Steps.CMDB, Steps.GROUPS],
+    executionHandler: buildGroupManagesCMDB,
   },
 ];

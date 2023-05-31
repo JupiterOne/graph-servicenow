@@ -137,13 +137,16 @@ The following entities are created:
 
 The following relationships are created:
 
-| Source Entity `_type`  | Relationship `_class` | Target Entity `_type` |
-| ---------------------- | --------------------- | --------------------- |
-| `service_now_account`  | **HAS**               | `service_now_group`   |
-| `service_now_account`  | **HAS**               | `service_now_user`    |
-| `service_now_group`    | **HAS**               | `service_now_group`   |
-| `service_now_group`    | **HAS**               | `service_now_user`    |
-| `service_now_incident` | **ASSIGNED**          | `service_now_user`    |
+| Source Entity `_type`     | Relationship `_class` | Target Entity `_type`     |
+| ------------------------- | --------------------- | ------------------------- |
+| `service_now_account`     | **HAS**               | `service_now_group`       |
+| `service_now_account`     | **HAS**               | `service_now_user`        |
+| `service_now_cmdb_object` | **ASSIGNED**          | `service_now_user`        |
+| `service_now_group`       | **HAS**               | `service_now_group`       |
+| `service_now_group`       | **HAS**               | `service_now_user`        |
+| `service_now_incident`    | **ASSIGNED**          | `service_now_user`        |
+| `service_now_user`        | **MANAGES**           | `service_now_cmdb_object` |
+| `service_now_user`        | **OWNS**              | `service_now_cmdb_object` |
 
 <!--
 ********************************************************************************

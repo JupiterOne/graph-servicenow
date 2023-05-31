@@ -17,21 +17,6 @@ export enum ServiceNowTable {
   DATABASE_TABLES = 'sys_db_object',
   GROUP_MEMBER = 'sys_user_grmember',
   INCIDENT = 'incident',
-  //  //DEVICES
-  // COMPUTER = 'cmdb_ci_computer',
-  // SERVER = 'cmdb_ci_server',
-  // VM = 'cmdb_ci_vm',
-  // VM_INSTANCE = 'cmdb_ci_vm_instance',
-  // PRINTER = 'cmdb_ci_printer',
-  // NETGEAR = 'cmdb_ci_netgear',
-  // COMM = 'cmdb_ci_comm',
-  // CLUSTER = 'cmdb_ci_cluster',
-  // CLUSTER_VIP = 'cmdb_ci_cluster_vip',
-  // FACILITY_HARDWARE = 'cmdb_ci_facility_hardware',
-  // MSD = 'cmdb_ci_msd',
-  // VPN = 'cmdb_ci_vpn',
-  // CI = 'cmdb_ci',
-  // linux_server = 'cmdb_ci_linux_server',
   sys_dictionary = 'sys_db_object',
 }
 
@@ -138,9 +123,14 @@ export class ServiceNowClient {
     table: string;
     callback: Iteratee;
     query?: { [key: string]: string };
+    limit?: number;
   }) {
-    const { table, callback, query } = options;
-    let url: string | undefined = this.createRequestUrl({ table, query });
+    const { table, callback, query, limit } = options;
+    let url: string | undefined = this.createRequestUrl({
+      table,
+      limit,
+      query,
+    });
     do {
       const resources = await this.retryResourceRequest(url);
 

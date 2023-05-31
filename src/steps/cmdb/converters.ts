@@ -1,6 +1,7 @@
 import {
   Entity,
   createIntegrationEntity,
+  parseTimePropertyValue,
 } from '@jupiterone/integration-sdk-core';
 import { Entities } from '../../constants';
 import { CMDBItem } from '../../types';
@@ -36,6 +37,8 @@ export function createCMDBEntity(
         subcategory: data.subcategory,
         warrantyExpiration: data.warranty_expiration,
         model: data.model_number,
+        createdOn: parseTimePropertyValue(data.sys_created_on),
+        updatedOn: parseTimePropertyValue(data.sys_updated_on),
       },
     },
   });
