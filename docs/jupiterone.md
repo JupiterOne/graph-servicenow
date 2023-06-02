@@ -144,6 +144,7 @@ The following relationships are created:
 | `service_now_cmdb_object` | **ASSIGNED**          | `service_now_user`        |
 | `service_now_group`       | **HAS**               | `service_now_group`       |
 | `service_now_group`       | **HAS**               | `service_now_user`        |
+| `service_now_group`       | **MANAGES**           | `service_now_cmdb_object` |
 | `service_now_incident`    | **ASSIGNED**          | `service_now_user`        |
 | `service_now_user`        | **MANAGES**           | `service_now_cmdb_object` |
 | `service_now_user`        | **OWNS**              | `service_now_cmdb_object` |

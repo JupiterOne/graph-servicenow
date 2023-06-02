@@ -42,7 +42,7 @@ export type CMDBItem = {
   asset_tag: string;
   fqdn: string;
   change_control: string;
-  owned_by: string;
+  owned_by: Asset;
   checked_out: string;
   sys_domain_path: string;
   business_unit: string;
@@ -60,8 +60,8 @@ export type CMDBItem = {
   subcategory: string;
   short_description: string;
   assignment_group: string;
-  managed_by: string;
-  managed_by_group: string;
+  managed_by: Asset;
+  managed_by_group: Asset;
   can_print: string;
   last_discovered: string;
   sys_class_name: string;

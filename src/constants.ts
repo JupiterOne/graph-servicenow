@@ -80,19 +80,19 @@ export const Relationships = {
     targetType: Entities.USER._type,
   },
   USER_OWNS_CMDB: {
-    _type: 'service_now_user_owns_cmdb',
+    _type: 'service_now_user_owns_cmdb_object',
     sourceType: Entities.USER._type,
     _class: RelationshipClass.OWNS,
     targetType: Entities.CMDB_OBJECT._type,
   },
   USER_MANAGES_CMDB: {
-    _type: 'service_now_user_manages_cmdb',
+    _type: 'service_now_user_manages_cmdb_object',
     sourceType: Entities.USER._type,
     _class: RelationshipClass.MANAGES,
     targetType: Entities.CMDB_OBJECT._type,
   },
   GROUP_MANAGES_CMDB: {
-    _type: 'service_now_user_manages_cmdb',
+    _type: 'service_now_group_manages_cmdb_object',
     sourceType: Entities.GROUP._type,
     _class: RelationshipClass.MANAGES,
     targetType: Entities.CMDB_OBJECT._type,

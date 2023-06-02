@@ -38,7 +38,7 @@ export async function buildUserManagesCMDB(
     { _type: Entities.CMDB_OBJECT._type },
     async (cmdbEntity) => {
       const cmdb = getRawData<CMDBItem>(cmdbEntity);
-      const userId = cmdb?.managed_by;
+      const userId = cmdb?.managed_by.value;
       if (!userId) {
         return;
       }
@@ -63,7 +63,7 @@ export async function buildUserOwnsCMDB(
     { _type: Entities.CMDB_OBJECT._type },
     async (cmdbEntity) => {
       const cmdb = getRawData<CMDBItem>(cmdbEntity);
-      const userId = cmdb?.owned_by;
+      const userId = cmdb?.owned_by.value;
       if (!userId) {
         return;
       }
@@ -88,7 +88,7 @@ export async function buildGroupManagesCMDB(
     { _type: Entities.CMDB_OBJECT._type },
     async (cmdbEntity) => {
       const cmdb = getRawData<CMDBItem>(cmdbEntity);
-      const groupId = cmdb?.managed_by_group;
+      const groupId = cmdb?.managed_by_group.value;
       if (!groupId) {
         return;
       }
