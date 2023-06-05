@@ -1,4 +1,5 @@
 import {
+  IntegrationLogger,
   IntegrationStepExecutionContext,
   RelationshipClass,
   Step,
@@ -24,7 +25,7 @@ export async function fetchCMDB(
     callback: async (resource: CMDBItem) => {
       const sysClassNames = [
         resource.sys_class_name,
-        ...(await getAllParents(client, resource.sys_class_name)),
+        ...(await getAllParents(client, resource.sys_class_name, logger)),
       ];
       await jobState.addEntity(createCMDBEntity(resource, sysClassNames));
     },
@@ -133,6 +134,7 @@ export async function buildCMDBAssignedUser(
 async function getAllParents(
   client: ServiceNowClient,
   sysClassName: string,
+  logger: IntegrationLogger,
 ): Promise<string[]> {
   if (sysClassName == 'cmdb_ci') {
     return [];
@@ -142,16 +144,28 @@ async function getAllParents(
       table: ServiceNowTable.sys_dictionary,
       query: { name: sysClassName, sysparm_fields: 'super_class,name' },
       callback: async (r: DictionaryItem) => {
-        const newParent = await client.retryResourceRequest(
-          `${r.super_class.link}?sysparm_fields=super_class,name`,
-        );
-        SysClassNamesParents[r.name] = (newParent as any).name;
+        try {
+          const newParent = await client.retryResourceRequest(
+            `${r.super_class.link}?sysparm_fields=super_class,name`,
+          );
+          SysClassNamesParents[r.name] = (newParent as any).name;
+        } catch (error) {
+          return;
+        }
       },
     });
   }
+  if (!SysClassNamesParents[sysClassName]) {
+    logger.error({ sysClassName }, 'Could not find super class');
+    return [];
+  }
   return [
     SysClassNamesParents[sysClassName],
-    ...(await getAllParents(client, SysClassNamesParents[sysClassName])),
+    ...(await getAllParents(
+      client,
+      SysClassNamesParents[sysClassName],
+      logger,
+    )),
   ];
 }
 export const cmdbIntegrationSteps: Step<
