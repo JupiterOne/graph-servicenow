@@ -6,7 +6,7 @@ import {
   createDirectRelationship,
   getRawData,
 } from '@jupiterone/integration-sdk-core';
-import { CMDBItem, DictionaryItem, IntegrationConfig } from '../../types';
+import { CMDBItem, IntegrationConfig } from '../../types';
 import { ServiceNowClient, ServiceNowTable } from '../../client';
 import { Entities, Relationships, Steps } from '../../constants';
 import { createCMDBEntity } from './converters';
@@ -19,17 +19,36 @@ export async function fetchCMDB(
   const { logger, instance, jobState } = context;
   const client = new ServiceNowClient(instance.config, logger);
   SysClassNamesParents = {};
+  const otherIds: { [key: string]: string[] } = {};
   await client.iterateTableResources({
     table: instance.config.cmdb_parent,
     limit: 400,
     callback: async (resource: CMDBItem) => {
-      const sysClassNames = [
-        resource.sys_class_name,
-        ...(await getAllParents(client, resource.sys_class_name, logger)),
-      ];
-      await jobState.addEntity(createCMDBEntity(resource, sysClassNames));
+      if (resource.sys_class_name == instance.config.cmdb_parent) {
+        const sysClassNames = [
+          resource.sys_class_name,
+          ...(await getAllParents(client, resource.sys_class_name, logger)),
+        ];
+        await jobState.addEntity(createCMDBEntity(resource, sysClassNames));
+      } else {
+        if (!otherIds[resource.sys_class_name]) {
+          otherIds[resource.sys_class_name] = [];
+        }
+        otherIds[resource.sys_class_name].push(resource.sys_id);
+      }
     },
   });
+  for (const key in otherIds) {
+    const sysClassNames = [key, ...(await getAllParents(client, key, logger))];
+    await client.iterateTableResources({
+      table: key,
+      limit: 400,
+      callback: async (resource: CMDBItem) => {
+        if (!otherIds[key].includes(resource.sys_id)) return;
+        await jobState.addEntity(createCMDBEntity(resource, sysClassNames));
+      },
+    });
+  }
 }
 export async function buildUserManagesCMDB(
   context: IntegrationStepExecutionContext<IntegrationConfig>,
@@ -140,20 +159,19 @@ async function getAllParents(
     return [];
   }
   if (!SysClassNamesParents[sysClassName]) {
-    await client.iterateTableResources({
+    const dictionaryClass = (await client.fetchTableResource({
       table: ServiceNowTable.sys_dictionary,
       query: { name: sysClassName, sysparm_fields: 'super_class,name' },
-      callback: async (r: DictionaryItem) => {
-        try {
-          const newParent = await client.retryResourceRequest(
-            `${r.super_class.link}?sysparm_fields=super_class,name`,
-          );
-          SysClassNamesParents[r.name] = (newParent as any).name;
-        } catch (error) {
-          return;
-        }
-      },
-    });
+    })) as any;
+    try {
+      const newParent = await client.retryResourceRequest(
+        `${dictionaryClass[0].super_class.link}?sysparm_fields=super_class,name`,
+      );
+      SysClassNamesParents[dictionaryClass[0].name] = (newParent as any).name;
+    } catch (error) {
+      logger.error({ error }, 'Could not find super class');
+      return [];
+    }
   }
   if (!SysClassNamesParents[sysClassName]) {
     logger.error({ sysClassName }, 'Could not find super class');

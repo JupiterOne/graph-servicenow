@@ -10,6 +10,12 @@ export function createCMDBEntity(
   data: CMDBItem,
   sysClassNames: string[],
 ): Entity {
+  const customFields: { [key: string]: string } = {};
+  for (const [key, value] of Object.entries(data)) {
+    if (key.startsWith('u_') || key.includes('_u_')) {
+      customFields[key.split('_').join('-')] = JSON.stringify(value);
+    }
+  }
   return createIntegrationEntity({
     entityData: {
       source: data,
@@ -36,6 +42,7 @@ export function createCMDBEntity(
         model: data.model_number,
         createdOn: parseTimePropertyValue(data.sys_created_on),
         updatedOn: parseTimePropertyValue(data.sys_updated_on),
+        ...customFields,
       },
     },
   });

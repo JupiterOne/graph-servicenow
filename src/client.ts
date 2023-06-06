@@ -118,7 +118,13 @@ export class ServiceNowClient {
       },
     );
   }
-
+  async fetchTableResource(options: {
+    table: string;
+    limit?: number;
+    query?: { [key: string]: string };
+  }): Promise<object[] & { nextLink: string | undefined }> {
+    return this.retryResourceRequest(this.createRequestUrl(options));
+  }
   async iterateTableResources(options: {
     table: string;
     callback: Iteratee;
