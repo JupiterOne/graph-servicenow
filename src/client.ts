@@ -85,7 +85,7 @@ export class ServiceNowClient {
     if (options.query)
       [
         Object.entries(options.query).forEach(
-          (item) => (query += `&${item[0]}=${item[1]}`),
+          ([key, value]) => (query += `&${key}=${value}`),
         ),
       ];
     return `https://${this.hostname}/api/now/table/${options.table}?sysparm_limit=${limit}${query}`;
