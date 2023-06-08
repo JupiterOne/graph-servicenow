@@ -19,7 +19,8 @@ export async function fetchCMDB(
   const { logger, instance, jobState } = context;
   const client = new ServiceNowClient(instance.config, logger);
   SysClassNamesParents = {};
-  const otherIds: { [key: string]: string[] } = {};
+  const otherClassesIds: { [key: string]: string[] } = {};
+
   await client.iterateTableResources({
     table: instance.config.cmdb_parent,
     limit: 400,
@@ -31,20 +32,23 @@ export async function fetchCMDB(
         ];
         await jobState.addEntity(createCMDBEntity(resource, sysClassNames));
       } else {
-        if (!otherIds[resource.sys_class_name]) {
-          otherIds[resource.sys_class_name] = [];
+        //This is probably a memory problem with larges amount of data. For now it makes it
+        //really efficient in ammount of calls. But not good in memory. Might need to be optimized.
+        if (!otherClassesIds[resource.sys_class_name]) {
+          otherClassesIds[resource.sys_class_name] = [];
         }
-        otherIds[resource.sys_class_name].push(resource.sys_id);
+        otherClassesIds[resource.sys_class_name].push(resource.sys_id);
       }
     },
   });
-  for (const key in otherIds) {
+
+  for (const key in otherClassesIds) {
     const sysClassNames = [key, ...(await getAllParents(client, key, logger))];
     await client.iterateTableResources({
       table: key,
       limit: 400,
       callback: async (resource: CMDBItem) => {
-        if (!otherIds[key].includes(resource.sys_id)) return;
+        if (!otherClassesIds[key].includes(resource.sys_id)) return;
         await jobState.addEntity(createCMDBEntity(resource, sysClassNames));
       },
     });
