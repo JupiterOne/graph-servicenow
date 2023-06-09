@@ -18,4 +18,13 @@ export default async function validateInvocation(
 
   const client = new ServiceNowClient(config, context.logger);
   await client.validate();
+  if (config.cmdb_parent) {
+    try {
+      await client.validateCMDBParent(config.cmdb_parent);
+    } catch (error) {
+      throw new IntegrationValidationError(
+        `Config requires the input of a valid CMDB parent. ${error.message}`,
+      );
+    }
+  }
 }

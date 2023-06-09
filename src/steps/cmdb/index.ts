@@ -22,7 +22,7 @@ export async function fetchCMDB(
   const otherClassesIds: { [key: string]: string[] } = {};
 
   await client.iterateTableResources({
-    table: instance.config.cmdb_parent,
+    table: instance.config.cmdb_parent ?? 'cmdb_ci',
     limit: 400,
     callback: async (resource: CMDBItem) => {
       if (resource.sys_class_name == instance.config.cmdb_parent) {

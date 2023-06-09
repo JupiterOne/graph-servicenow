@@ -38,6 +38,7 @@ export const Entities = {
     resourceName: 'CMDB Object',
     _type: 'service_now_cmdb_object',
     _class: 'Configuration',
+    disableClassMatch: true,
   },
 };
 

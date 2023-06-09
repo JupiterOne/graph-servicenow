@@ -44,7 +44,12 @@ export class ServiceNowClient {
 
     this.limit = DEFAULT_RESPONSE_LIMIT;
   }
-
+  async validateCMDBParent(parent: string) {
+    return this.fetchTableResource({
+      table: parent,
+      limit: 1,
+    });
+  }
   async validate() {
     const url = this.createRequestUrl({
       table: ServiceNowTable.USER,
@@ -182,13 +187,7 @@ export class ServiceNowClient {
       callback,
     });
   }
-  // async iterateComputers(callback: Iteratee) {
-  //   return this.iterateTableResources({
-  //     table: ServiceNowTable.sys_dictionary,
-  //     callback,
-  //     query:{'name':'cmdb_ci_server'}
-  //   });
-  // }
+
   async listTableNames(tableNamePrefix: string = ''): Promise<string[]> {
     const tableNames: string[] = [];
     await this.iterateTableResources({

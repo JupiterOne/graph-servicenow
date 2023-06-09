@@ -12,7 +12,7 @@ export interface IntegrationConfig extends IntegrationInstanceConfig {
   /**
    * Parent of all the sys_class_name to ingest
    */
-  cmdb_parent: string;
+  cmdb_parent: string | undefined;
   /**
    * Username for basic auth
    */
