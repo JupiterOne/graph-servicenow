@@ -23,12 +23,15 @@ export async function fetchCMDB(
   SysClassNamesParents = {};
   const otherClassesIds: { [key: string]: string[] } = {};
 
+  const parent = instance.config.cmdb_parent ?? 'cmdb_ci'; //If the config parameter is not filled in,
+  //ingest the whole cmdb, might want to change this (maybe even disable the step)
+
   await client.iterateTableResources({
-    table: instance.config.cmdb_parent ?? 'cmdb_ci',
+    table: parent,
     limit: 400,
     callback: async (resource: CMDBItem) => {
       //If the class equals the cmdb_parent then ingest it as is.
-      if (resource.sys_class_name == instance.config.cmdb_parent) {
+      if (resource.sys_class_name == parent) {
         const sysClassNames = [
           resource.sys_class_name,
           ...(await getAllParents(client, resource.sys_class_name, logger)),
