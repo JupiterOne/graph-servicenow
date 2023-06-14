@@ -9,6 +9,8 @@
 - Monitor changes to these ServiceNow entities using JupiterOne Alerts.
 - Query for users in JupiterOne that have access to ServiceNow and that
   incidents they have been assigned.
+- Get a detailed description of any part of your CMDB, and it's relationships
+  with users
 
 ## How it Works
 
@@ -55,6 +57,7 @@ and assigning that read-only role to a dedicated ServiceNow user.
    - `sys_user_group`
    - `sys_user_grmember`
    - `incident`
+   - `sys_db_object`
 
 3. Create a
    [new ServiceNow User](https://docs.servicenow.com/bundle/rome-platform-administration/page/administer/users-and-groups/task/t_CreateAUser.html)
@@ -63,7 +66,10 @@ and assigning that read-only role to a dedicated ServiceNow user.
 
 4. Open the `JupiterOne` user and
    [assign the `jupiterone_reader` role](https://docs.servicenow.com/bundle/rome-platform-administration/page/administer/users-and-groups/task/t_AssignARoleToAUser.html)
-   to your newly created user.
+   to your newly created user. **Note**: if ingesting any part of the cmdb, also
+   add the `cmdb_reader` role. See
+   [this link](https://docs.servicenow.com/bundle/utah-platform-administration/page/administer/roles/reference/r_BaseSystemRoles.html)
+   for more information.
 
 5. (**OPTIONAL**) For JupiterOne users who wish to create ServiceNow incidents
    based on JupiterOne alert rules, we suggest creating a
