@@ -10,8 +10,10 @@ export function createCMDBEntity(
   data: CMDBItem,
   sysClassNames: string[],
 ): Entity {
+  //For now all sysclassnames use the same converter. We can always create different converters.
   const customFields: { [key: string]: string } = {};
   for (const [key, value] of Object.entries(data)) {
+    //custom fields
     if (key.startsWith('u_') || key.includes('_u_')) {
       customFields[key.split('_').join('-')] = JSON.stringify(value);
     }

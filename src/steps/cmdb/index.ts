@@ -10,9 +10,11 @@ import { CMDBItem, IntegrationConfig } from '../../types';
 import { ServiceNowClient, ServiceNowTable } from '../../client';
 import { Entities, Relationships, Steps } from '../../constants';
 import { createCMDBEntity } from './converters';
+
 let SysClassNamesParents: {
   [key: string]: string;
-};
+}; //Used to store a cache of the parents of each class
+
 export async function fetchCMDB(
   context: IntegrationStepExecutionContext<IntegrationConfig>,
 ) {
@@ -25,6 +27,7 @@ export async function fetchCMDB(
     table: instance.config.cmdb_parent ?? 'cmdb_ci',
     limit: 400,
     callback: async (resource: CMDBItem) => {
+      //If the class equals the cmdb_parent then ingest it as is.
       if (resource.sys_class_name == instance.config.cmdb_parent) {
         const sysClassNames = [
           resource.sys_class_name,
@@ -32,6 +35,7 @@ export async function fetchCMDB(
         ];
         await jobState.addEntity(createCMDBEntity(resource, sysClassNames));
       } else {
+        //If the class does not equal the cmdb_parent then save the class and id.
         //This is probably a memory problem with larges amount of data. For now it makes it
         //really efficient in ammount of calls. But not good in memory. Might need to be optimized.
         if (!otherClassesIds[resource.sys_class_name]) {
@@ -41,7 +45,7 @@ export async function fetchCMDB(
       }
     },
   });
-
+  //for all saved classes and ids, fetch the class and ingest.
   for (const key in otherClassesIds) {
     const sysClassNames = [key, ...(await getAllParents(client, key, logger))];
     await client.iterateTableResources({
@@ -159,6 +163,8 @@ async function getAllParents(
   sysClassName: string,
   logger: IntegrationLogger,
 ): Promise<string[]> {
+  //This functions fetches the parents until the root of the tree. If it is stored in the cache
+  //we avoid calling the endpoint.
   if (sysClassName == 'cmdb_ci') {
     return [];
   }
