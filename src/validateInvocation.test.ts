@@ -33,6 +33,7 @@ test('Should throw if invalid hostname', async () => {
       hostname: 'invalid.service-now.com',
       username: 'invalid',
       password: 'invalid',
+      cmdb_parent: 'invalid',
     },
   });
 
@@ -71,6 +72,7 @@ describe('recordings', () => {
         hostname: process.env.HOSTNAME || 'dev128112.service-now.com',
         username: process.env.USERNAME || 'valid_username',
         password: process.env.PASSWORD || 'valid_password',
+        cmdb_parent: undefined,
       },
     });
     const hostname = executionContext.instance.config.hostname;
@@ -100,10 +102,36 @@ describe('recordings', () => {
         hostname: process.env.HOSTNAME || 'dev94579.service-now.com',
         username: process.env.USERNAME || 'valid_username',
         password: process.env.PASSWORD || 'valid_password',
+        cmdb_parent: undefined,
       },
     });
 
     const response = await validateInvocation(executionContext);
     expect(response).toBeUndefined();
+  });
+
+  test('When cmdb parent is invalid', async () => {
+    recording = setupServiceNowRecording({
+      directory: __dirname,
+      name: 'validateInvocationPassesWithBadCMDBParent',
+      options: {
+        recordFailedRequests: true,
+      },
+    });
+
+    const executionContext = createMockExecutionContext<IntegrationConfig>({
+      instanceConfig: {
+        hostname: process.env.HOSTNAME || 'dev94579.service-now.com',
+        username: process.env.USERNAME || 'valid_username',
+        password: process.env.PASSWORD || 'valid_password',
+        cmdb_parent: 'valid_cmdb_parent',
+      },
+    });
+
+    await expect(async () => {
+      await validateInvocation(executionContext);
+    }).rejects.toThrow(
+      'Config requires the input of a valid CMDB parent. Request failed with status code 400',
+    );
   });
 });

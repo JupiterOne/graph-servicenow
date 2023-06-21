@@ -115,7 +115,7 @@ export async function fetchIncidents(
   });
 }
 
-export const integrationSteps: Step<
+export const sysSteps: Step<
   IntegrationStepExecutionContext<IntegrationConfig>
 >[] = [
   {

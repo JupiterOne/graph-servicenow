@@ -17,6 +17,7 @@ export enum ServiceNowTable {
   DATABASE_TABLES = 'sys_db_object',
   GROUP_MEMBER = 'sys_user_grmember',
   INCIDENT = 'incident',
+  SYS_DICTIONARY = 'sys_db_object',
 }
 
 const DEFAULT_RESPONSE_LIMIT = 100;
@@ -43,7 +44,12 @@ export class ServiceNowClient {
 
     this.limit = DEFAULT_RESPONSE_LIMIT;
   }
-
+  async validateCMDBParent(parent: string) {
+    return this.fetchTableResource({
+      table: parent,
+      limit: 1,
+    });
+  }
   async validate() {
     const url = this.createRequestUrl({
       table: ServiceNowTable.USER,
@@ -75,11 +81,19 @@ export class ServiceNowClient {
   }
 
   private createRequestUrl(options: {
-    table: ServiceNowTable;
+    table: string;
     limit?: number;
+    query?: { [key: string]: string };
   }) {
     const limit = options.limit || this.limit;
-    return `https://${this.hostname}/api/now/table/${options.table}?sysparm_limit=${limit}`;
+    let query = '';
+    if (options.query)
+      [
+        Object.entries(options.query).forEach(
+          ([key, value]) => (query += `&${key}=${value}`),
+        ),
+      ];
+    return `https://${this.hostname}/api/now/table/${options.table}?sysparm_limit=${limit}${query}`;
   }
 
   private async request(options: { url: string }) {
@@ -94,7 +108,7 @@ export class ServiceNowClient {
     });
   }
 
-  private async retryResourceRequest(
+  async retryResourceRequest(
     url: string,
   ): Promise<object[] & { nextLink: string | undefined }> {
     return retry(
@@ -109,13 +123,25 @@ export class ServiceNowClient {
       },
     );
   }
-
-  private async iterateTableResources(options: {
-    table: ServiceNowTable;
+  async fetchTableResource(options: {
+    table: string;
+    limit?: number;
+    query?: { [key: string]: string };
+  }): Promise<object[] & { nextLink: string | undefined }> {
+    return this.retryResourceRequest(this.createRequestUrl(options));
+  }
+  async iterateTableResources(options: {
+    table: string;
     callback: Iteratee;
+    query?: { [key: string]: string };
+    limit?: number;
   }) {
-    const { table, callback } = options;
-    let url: string | undefined = this.createRequestUrl({ table });
+    const { table, callback, query, limit } = options;
+    let url: string | undefined = this.createRequestUrl({
+      table,
+      limit,
+      query,
+    });
     do {
       const resources = await this.retryResourceRequest(url);
 
