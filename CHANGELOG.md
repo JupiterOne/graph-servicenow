@@ -1,3 +1,20 @@
+# v1.0.0 (Wed Jun 21 2023)
+
+#### 💥 Breaking Change
+
+- Cmdb ingestion [#41](https://github.com/JupiterOne/graph-servicenow/pull/41) (gonzaloavalosribas@Gonzalos-MacBook-Pro.local)
+
+#### 🐛 Bug Fix
+
+- Update integration-deployment.yml [#40](https://github.com/JupiterOne/graph-servicenow/pull/40) ([@Nick-NCSU](https://github.com/Nick-NCSU))
+
+#### Authors: 2
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+- Nick Thompson ([@Nick-NCSU](https://github.com/Nick-NCSU))
+
+---
+
 ## v0.3.1 - 2023-05-16
 
 ### Added
