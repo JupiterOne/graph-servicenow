@@ -172,7 +172,7 @@ async function getAllParents(
   }
   if (!SysClassNamesParents[sysClassName]) {
     const dictionaryClass = (await client.fetchTableResource({
-      table: ServiceNowTable.sys_dictionary,
+      table: ServiceNowTable.SYS_DICTIONARY,
       query: { name: sysClassName, sysparm_fields: 'super_class,name' },
     })) as any;
     try {

@@ -40,7 +40,7 @@ export function createCMDBEntity(
         operationalStatus: data.operational_status,
         serial: data.serial_number,
         subcategory: data.subcategory,
-        warrantyExpiration: data.warranty_expiration,
+        warrantyExpiration: parseTimePropertyValue(data.warranty_expiration),
         model: data.model_number,
         createdOn: parseTimePropertyValue(data.sys_created_on),
         updatedOn: parseTimePropertyValue(data.sys_updated_on),

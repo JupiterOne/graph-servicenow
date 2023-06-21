@@ -17,7 +17,7 @@ export enum ServiceNowTable {
   DATABASE_TABLES = 'sys_db_object',
   GROUP_MEMBER = 'sys_user_grmember',
   INCIDENT = 'incident',
-  sys_dictionary = 'sys_db_object',
+  SYS_DICTIONARY = 'sys_db_object',
 }
 
 const DEFAULT_RESPONSE_LIMIT = 100;
