@@ -1,3 +1,15 @@
+# v1.0.1 (Fri Jul 28 2023)
+
+#### 🐛 Bug Fix
+
+- Removed duplicated keys in the grmembers step [#42](https://github.com/JupiterOne/graph-servicenow/pull/42) (gonzaloavalosribas@Gonzalos-MacBook-Pro.local)
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v1.0.0 (Wed Jun 21 2023)
 
 #### 💥 Breaking Change
