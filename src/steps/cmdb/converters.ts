@@ -5,10 +5,6 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { Entities } from '../../constants';
 import { CMDBItem } from '../../types';
-export const skippedRawDataSource = {
-  uploadStatus: 'SKIPPED',
-  uploadStatusReason: 'Raw data currently disabled for this entity type',
-};
 
 export function createCMDBEntity(
   data: CMDBItem,
@@ -24,7 +20,7 @@ export function createCMDBEntity(
   }
   return createIntegrationEntity({
     entityData: {
-      source: skippedRawDataSource,
+      source: data,
       assign: {
         _class: Entities.CMDB_OBJECT._class,
         _type: Entities.CMDB_OBJECT._type,
