@@ -1,3 +1,15 @@
+# v1.0.2 (Mon Jul 31 2023)
+
+#### 🐛 Bug Fix
+
+- Removed duplicated keys on cmdb_item step [#43](https://github.com/JupiterOne/graph-servicenow/pull/43) (gonzaloavalosribas@Gonzalos-MacBook-Pro.local)
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v1.0.1 (Fri Jul 28 2023)
 
 #### 🐛 Bug Fix
