@@ -35,7 +35,9 @@ export async function fetchCMDB(
           resource.sys_class_name,
           ...(await getAllParents(client, resource.sys_class_name, logger)),
         ];
-        await jobState.addEntity(createCMDBEntity(resource, sysClassNames));
+        if (!jobState.hasKey(resource.sys_id)) {
+          await jobState.addEntity(createCMDBEntity(resource, sysClassNames));
+        }
       } else {
         //If the class does not equal the cmdb_parent then save the class and id.
         //This is probably a memory problem with larges amount of data. For now it makes it
@@ -55,7 +57,9 @@ export async function fetchCMDB(
       limit: 400,
       callback: async (resource: CMDBItem) => {
         if (!otherClassesIds[key].includes(resource.sys_id)) return;
-        await jobState.addEntity(createCMDBEntity(resource, sysClassNames));
+        if (!jobState.hasKey(resource.sys_id)) {
+          await jobState.addEntity(createCMDBEntity(resource, sysClassNames));
+        }
       },
     });
   }
