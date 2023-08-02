@@ -39,7 +39,13 @@ export async function fetchUsers(
   const accountEntity = (await jobState.getData(
     Entities.ACCOUNT._type,
   )) as Entity;
-
+  if (!accountEntity) {
+    logger.info(
+      { _type: Entities.ACCOUNT._type },
+      'Did not find an account with that type',
+    );
+    return;
+  }
   await client.iterateUsers(async (user) => {
     const userEntity = await jobState.addEntity(createUserEntity(user));
 
