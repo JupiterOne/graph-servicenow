@@ -20,7 +20,7 @@ export enum ServiceNowTable {
   SYS_DICTIONARY = 'sys_db_object',
 }
 
-const DEFAULT_RESPONSE_LIMIT = 100;
+const DEFAULT_RESPONSE_LIMIT = 500;
 
 /**
  * The ServiceNowClient maintains authentication state and provides an interface to

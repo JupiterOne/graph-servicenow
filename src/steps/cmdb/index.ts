@@ -4,7 +4,6 @@ import {
   RelationshipClass,
   Step,
   createDirectRelationship,
-  getRawData,
 } from '@jupiterone/integration-sdk-core';
 import { CMDBItem, IntegrationConfig } from '../../types';
 import { ServiceNowClient, ServiceNowTable } from '../../client';
@@ -27,7 +26,6 @@ export async function fetchCMDB(
 
   await client.iterateTableResources({
     table: parent,
-    limit: 400,
     callback: async (resource: CMDBItem) => {
       //If the class equals the cmdb_parent then ingest it as is.
       if (resource.sys_class_name == parent) {
@@ -54,7 +52,6 @@ export async function fetchCMDB(
     const sysClassNames = [key, ...(await getAllParents(client, key, logger))];
     await client.iterateTableResources({
       table: key,
-      limit: 400,
       callback: async (resource: CMDBItem) => {
         if (!otherClassesIds[key].includes(resource.sys_id)) return;
         if (!jobState.hasKey(resource.sys_id)) {
@@ -71,8 +68,7 @@ export async function buildUserManagesCMDB(
   await jobState.iterateEntities(
     { _type: Entities.CMDB_OBJECT._type },
     async (cmdbEntity) => {
-      const cmdb = getRawData<CMDBItem>(cmdbEntity);
-      const userId = cmdb?.managed_by.value;
+      const userId = (cmdbEntity as any).managedBy;
       if (!userId) {
         return;
       }
@@ -96,8 +92,7 @@ export async function buildUserOwnsCMDB(
   await jobState.iterateEntities(
     { _type: Entities.CMDB_OBJECT._type },
     async (cmdbEntity) => {
-      const cmdb = getRawData<CMDBItem>(cmdbEntity);
-      const userId = cmdb?.owned_by.value;
+      const userId = (cmdbEntity as any).ownedBy;
       if (!userId) {
         return;
       }
@@ -121,8 +116,7 @@ export async function buildGroupManagesCMDB(
   await jobState.iterateEntities(
     { _type: Entities.CMDB_OBJECT._type },
     async (cmdbEntity) => {
-      const cmdb = getRawData<CMDBItem>(cmdbEntity);
-      const groupId = cmdb?.managed_by_group.value;
+      const groupId = (cmdbEntity as any).managedByGroup;
       if (!groupId) {
         return;
       }
@@ -146,8 +140,7 @@ export async function buildCMDBAssignedUser(
   await jobState.iterateEntities(
     { _type: Entities.CMDB_OBJECT._type },
     async (cmdbEntity) => {
-      const cmdb = getRawData<CMDBItem>(cmdbEntity);
-      const userId = cmdb?.assigned_to.value;
+      const userId = (cmdbEntity as any).assignedTo;
       if (!userId) {
         return;
       }
@@ -207,7 +200,7 @@ export const cmdbIntegrationSteps: Step<
 >[] = [
   {
     id: Steps.CMDB,
-    name: 'Fetch CMDB Configuration Items',
+    name: 'CMDB Items',
     entities: [Entities.CMDB_OBJECT],
     relationships: [],
     dependsOn: [],
