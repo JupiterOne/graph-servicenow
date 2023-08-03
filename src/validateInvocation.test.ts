@@ -7,6 +7,7 @@ import { createMockExecutionContext } from '@jupiterone/integration-sdk-testing'
 import { IntegrationConfig } from './types';
 import validateInvocation from './validateInvocation';
 import { setupServiceNowRecording, Recording } from '../test/util/recording';
+import { createTestConfig } from '../test/util/createTestConfig';
 
 test('Should throw if invalid configuration', async () => {
   const executionContext = createMockExecutionContext<IntegrationConfig>({
@@ -121,10 +122,8 @@ describe('recordings', () => {
 
     const executionContext = createMockExecutionContext<IntegrationConfig>({
       instanceConfig: {
-        hostname: process.env.HOSTNAME || 'dev94579.service-now.com',
-        username: process.env.USERNAME || 'valid_username',
-        password: process.env.PASSWORD || 'valid_password',
-        cmdb_parent: 'valid_cmdb_parent',
+        ...createTestConfig('dev122002.service-now.com'),
+        cmdb_parent: 'invalid-parent',
       },
     });
 

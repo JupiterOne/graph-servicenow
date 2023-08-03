@@ -99,10 +99,13 @@ export async function buildGroupUserRelationships(
   const client = new ServiceNowClient(instance.config, logger);
 
   await client.iterateGroupMembers(async (groupMember) => {
+    if (!groupMember.group.value || !groupMember.user.value) return;
     if (
       !jobState.hasKey(
         `${groupMember.group.value}|has|${groupMember.user.value}`,
-      )
+      ) &&
+      jobState.hasKey(groupMember.group.value) &&
+      jobState.hasKey(groupMember.user.value)
     ) {
       await jobState.addRelationship(createGroupUserRelationship(groupMember));
     }

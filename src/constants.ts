@@ -18,6 +18,7 @@ export const Entities = {
     resourceName: 'Account',
     _type: 'service_now_account',
     _class: 'Account',
+    disableClassMatch: true,
   },
   USER: {
     resourceName: 'User',
@@ -35,6 +36,7 @@ export const Entities = {
     resourceName: 'Incident',
     _type: 'service_now_incident',
     _class: 'Incident',
+    disableClassMatch: true,
   },
   CMDB_OBJECT: {
     resourceName: 'CMDB Object',

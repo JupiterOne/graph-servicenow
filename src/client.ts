@@ -119,10 +119,38 @@ export class ServiceNowClient {
         });
       },
       {
-        maxAttempts: 2,
+        maxAttempts: 3,
+        handleError: async (error) => {
+          if (
+            error instanceof AxiosError &&
+            (error as AxiosError).response?.status === 429
+          ) {
+            const retryAfter = (error as AxiosError).response?.headers[
+              'retry-after'
+            ];
+            if (retryAfter) {
+              const timeToWaitInMillis = Number(retryAfter) * 1000;
+              const timeNow = new Date().getTime();
+              this.logger.info(
+                {
+                  TimeToWaitInMilis: retryAfter,
+                  timeNow: timeNow,
+                  waitingTill: timeNow + retryAfter,
+                },
+                'Hit Max API rate. Waiting for retry.',
+              );
+              await this.sleep(1000 * Number(timeToWaitInMillis));
+            }
+          }
+          return;
+        },
       },
     );
   }
+  async sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   async fetchTableResource(options: {
     table: string;
     limit?: number;

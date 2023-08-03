@@ -18,7 +18,6 @@ test(
   Steps.CMDB,
   async () => {
     const stepTestConfig = getStepTestConfigForStep(Steps.CMDB);
-
     recording = setupServiceNowRecording({
       name: Steps.CMDB,
       directory: __dirname,
@@ -27,7 +26,7 @@ test(
     const stepResults = await executeStepWithDependencies(stepTestConfig);
     expect(stepResults).toMatchStepMetadata(stepTestConfig);
   },
-  10_000,
+  1000_000,
 );
 
 test(
@@ -43,7 +42,7 @@ test(
     const stepResults = await executeStepWithDependencies(stepTestConfig);
     expect(stepResults).toMatchStepMetadata(stepTestConfig);
   },
-  10_000,
+  1000_000,
 );
 
 test(
@@ -59,7 +58,7 @@ test(
     const stepResults = await executeStepWithDependencies(stepTestConfig);
     expect(stepResults).toMatchStepMetadata(stepTestConfig);
   },
-  10_000,
+  1000_000,
 );
 
 test(
@@ -75,7 +74,7 @@ test(
     const stepResults = await executeStepWithDependencies(stepTestConfig);
     expect(stepResults).toMatchStepMetadata(stepTestConfig);
   },
-  10_000,
+  1000_000,
 );
 
 test(
@@ -91,5 +90,5 @@ test(
     const stepResults = await executeStepWithDependencies(stepTestConfig);
     expect(stepResults).toMatchStepMetadata(stepTestConfig);
   },
-  10_000,
+  1000_000,
 );
