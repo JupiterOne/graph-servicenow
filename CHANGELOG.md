@@ -1,3 +1,15 @@
+# v1.1.0 (Thu Aug 03 2023)
+
+#### 🚀 Enhancement
+
+- Int 8983 upgrade servicenow [#44](https://github.com/JupiterOne/graph-servicenow/pull/44) (gonzaloavalosribas@Gonzalos-MacBook-Pro.local)
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v1.0.2 (Mon Jul 31 2023)
 
 #### 🐛 Bug Fix
