@@ -3,6 +3,9 @@
   "version": "1.0.2",
   "description": "A graph conversion tool for ServiceNow",
   "license": "MPL-2.0",
+  "engines": {
+    "node": ">=18.0.0 <19.x"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -27,13 +30,13 @@
     "list-remote-tables": "ts-node tools/listRemoteTables.ts"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^8.19.0"
+    "@jupiterone/integration-sdk-core": "^9.0.0"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^8.19.0",
-    "@jupiterone/integration-sdk-dev-tools": "^8.19.0",
-    "@jupiterone/integration-sdk-runtime": "^8.19.0",
-    "@jupiterone/integration-sdk-testing": "^8.19.0",
+    "@jupiterone/integration-sdk-core": "^9.0.0",
+    "@jupiterone/integration-sdk-dev-tools": "^9.0.0",
+    "@jupiterone/integration-sdk-runtime": "^9.0.0",
+    "@jupiterone/integration-sdk-testing": "^9.0.0",
     "auto": "^10.37.4"
   },
   "dependencies": {

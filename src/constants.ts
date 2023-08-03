@@ -23,11 +23,13 @@ export const Entities = {
     resourceName: 'User',
     _type: 'service_now_user',
     _class: 'User',
+    disableClassMatch: true,
   },
   GROUP: {
     resourceName: 'User Group',
     _type: 'service_now_group',
     _class: 'UserGroup',
+    disableClassMatch: true,
   },
   INCIDENT: {
     resourceName: 'Incident',

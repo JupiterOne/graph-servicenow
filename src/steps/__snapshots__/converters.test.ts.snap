@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`createAccountEntity 1`] = `
-Object {
-  "_class": Array [
+{
+  "_class": [
     "Account",
   ],
   "_key": "dev00000.service-now.com",
-  "_rawData": Array [],
+  "_rawData": [],
   "_type": "service_now_account",
   "createdOn": undefined,
   "displayName": "dev00000.service-now.com",
@@ -15,15 +15,15 @@ Object {
 `;
 
 exports[`createGroupEntity 1`] = `
-Object {
-  "_class": Array [
+{
+  "_class": [
     "UserGroup",
   ],
   "_key": "66a74a7fdb1710109d87a9954b961914",
-  "_rawData": Array [
-    Object {
+  "_rawData": [
+    {
       "name": "default",
-      "rawData": Object {
+      "rawData": {
         "active": "true",
         "cost_center": "",
         "default_assignee": "",
@@ -33,7 +33,7 @@ Object {
         "include_members": "false",
         "manager": "",
         "name": "j1-subgroup",
-        "parent": Object {
+        "parent": {
           "link": "https://dev94579.service-now.com/api/now/table/sys_user_group/43f6027fdb1710109d87a9954b961939",
           "value": "43f6027fdb1710109d87a9954b961939",
         },
@@ -63,7 +63,7 @@ Object {
 `;
 
 exports[`createGroupEntity 2`] = `
-Object {
+{
   "_class": "HAS",
   "_fromEntityKey": "43f6027fdb1710109d87a9954b961939",
   "_key": "43f6027fdb1710109d87a9954b961939|has|66a74a7fdb1710109d87a9954b961914",
@@ -74,7 +74,7 @@ Object {
 `;
 
 exports[`createGroupUserRelationship 1`] = `
-Object {
+{
   "_class": "HAS",
   "_fromEntityKey": "43f6027fdb1710109d87a9954b961939",
   "_key": "43f6027fdb1710109d87a9954b961939|has|5ccbba87db1310109d87a9954b9619db",
@@ -88,15 +88,15 @@ Object {
 `;
 
 exports[`createUserEntity 1`] = `
-Object {
-  "_class": Array [
+{
+  "_class": [
     "User",
   ],
   "_key": "5ccbba87db1310109d87a9954b9619db",
-  "_rawData": Array [
-    Object {
+  "_rawData": [
+    {
       "name": "default",
-      "rawData": Object {
+      "rawData": {
         "active": "true",
         "avatar": "",
         "building": "",
@@ -107,7 +107,7 @@ Object {
         "country": "",
         "date_format": "",
         "default_perspective": "",
-        "department": Object {
+        "department": {
           "link": "https://dev94579.service-now.com/api/now/table/cmn_department/9d7802bfdb1710109d87a9954b96199d",
           "value": "9d7802bfdb1710109d87a9954b96199d",
         },
@@ -143,7 +143,7 @@ Object {
         "sys_class_name": "sys_user",
         "sys_created_by": "admin",
         "sys_created_on": "2020-09-21 17:57:17",
-        "sys_domain": Object {
+        "sys_domain": {
           "link": "https://dev94579.service-now.com/api/now/table/sys_user_group/global",
           "value": "global",
         },
@@ -176,7 +176,7 @@ Object {
 `;
 
 exports[`incident createIncidentAssigneeRelationship 1`] = `
-Object {
+{
   "_class": "ASSIGNED",
   "_fromEntityKey": "1c741bd70b2322007518478d83673af3",
   "_key": "1c741bd70b2322007518478d83673af3|assigned|5137153cc611227c000bbd1bd8cd2007",
@@ -187,38 +187,38 @@ Object {
 `;
 
 exports[`incident createIncidentEntity 1`] = `
-Object {
-  "_class": Array [
+{
+  "_class": [
     "Incident",
   ],
   "_key": "1c741bd70b2322007518478d83673af3",
-  "_rawData": Array [
-    Object {
+  "_rawData": [
+    {
       "name": "default",
-      "rawData": Object {
+      "rawData": {
         "active": "false",
         "activity_due": "2016-12-13 01:26:36",
         "additional_assignee_list": "",
         "approval": "not requested",
         "approval_history": "",
         "approval_set": "",
-        "assigned_to": Object {
+        "assigned_to": {
           "link": "https://dev94579.service-now.com/api/now/table/sys_user/5137153cc611227c000bbd1bd8cd2007",
           "value": "5137153cc611227c000bbd1bd8cd2007",
         },
-        "assignment_group": Object {
+        "assignment_group": {
           "link": "https://dev94579.service-now.com/api/now/table/sys_user_group/287ebd7da9fe198100f92cc8d1d2154e",
           "value": "287ebd7da9fe198100f92cc8d1d2154e",
         },
         "business_duration": "1970-01-01 08:00:00",
-        "business_service": Object {
+        "business_service": {
           "link": "https://dev94579.service-now.com/api/now/table/cmdb_ci_service/27d32778c0a8000b00db970eeaa60f16",
           "value": "27d32778c0a8000b00db970eeaa60f16",
         },
         "business_stc": "28800",
         "calendar_duration": "1970-01-02 04:23:17",
         "calendar_stc": "102197",
-        "caller_id": Object {
+        "caller_id": {
           "link": "https://dev94579.service-now.com/api/now/table/sys_user/681ccaf9c0a8016400b98a06818d57c7",
           "value": "681ccaf9c0a8016400b98a06818d57c7",
         },
@@ -228,17 +228,17 @@ Object {
         "close_code": "Solved (Permanently)",
         "close_notes": "This incident is resolved.",
         "closed_at": "2016-12-14 02:46:44",
-        "closed_by": Object {
+        "closed_by": {
           "link": "https://dev94579.service-now.com/api/now/table/sys_user/681ccaf9c0a8016400b98a06818d57c7",
           "value": "681ccaf9c0a8016400b98a06818d57c7",
         },
-        "cmdb_ci": Object {
+        "cmdb_ci": {
           "link": "https://dev94579.service-now.com/api/now/table/cmdb_ci/109562a3c611227500a7b7ff98cc0dc7",
           "value": "109562a3c611227500a7b7ff98cc0dc7",
         },
         "comments": "",
         "comments_and_work_notes": "",
-        "company": Object {
+        "company": {
           "link": "https://dev94579.service-now.com/api/now/table/core_company/31bea3d53790200044e0bfc8bcbe5dec",
           "value": "31bea3d53790200044e0bfc8bcbe5dec",
         },
@@ -263,7 +263,7 @@ Object {
         "notify": "1",
         "number": "INC0000060",
         "opened_at": "2016-12-12 15:19:57",
-        "opened_by": Object {
+        "opened_by": {
           "link": "https://dev94579.service-now.com/api/now/table/sys_user/681ccaf9c0a8016400b98a06818d57c7",
           "value": "681ccaf9c0a8016400b98a06818d57c7",
         },
@@ -277,7 +277,7 @@ Object {
         "reopened_by": "",
         "reopened_time": "",
         "resolved_at": "2016-12-13 21:43:14",
-        "resolved_by": Object {
+        "resolved_by": {
           "link": "https://dev94579.service-now.com/api/now/table/sys_user/5137153cc611227c000bbd1bd8cd2007",
           "value": "5137153cc611227c000bbd1bd8cd2007",
         },
@@ -292,7 +292,7 @@ Object {
         "sys_class_name": "incident",
         "sys_created_by": "employee",
         "sys_created_on": "2016-12-12 15:19:57",
-        "sys_domain": Object {
+        "sys_domain": {
           "link": "https://dev94579.service-now.com/api/now/table/sys_user_group/global",
           "value": "global",
         },
