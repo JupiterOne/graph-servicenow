@@ -25,7 +25,7 @@ test('step - account', async () => {
 
   const stepResults = await executeStepWithDependencies(stepTestConfig);
   expect(stepResults).toMatchStepMetadata(stepTestConfig);
-}, 100_000);
+}, 10_000);
 
 test('step - users', async () => {
   const stepTestConfig = getStepTestConfigForStep(Steps.USERS);
@@ -49,7 +49,7 @@ test('step - groups', async () => {
 
   const stepResults = await executeStepWithDependencies(stepTestConfig);
   expect(stepResults).toMatchStepMetadata(stepTestConfig);
-}, 100_000);
+}, 10_000);
 
 test('step - group members', async () => {
   const stepTestConfig = getStepTestConfigForStep(Steps.GROUP_MEMBERS);
@@ -61,7 +61,7 @@ test('step - group members', async () => {
 
   const stepResults = await executeStepWithDependencies(stepTestConfig);
   expect(stepResults).toMatchStepMetadata(stepTestConfig);
-}, 100_000);
+}, 10_000);
 
 test('step - incidents', async () => {
   const stepTestConfig = getStepTestConfigForStep(Steps.INCIDENTS);
@@ -73,4 +73,4 @@ test('step - incidents', async () => {
 
   const stepResults = await executeStepWithDependencies(stepTestConfig);
   expect(stepResults).toMatchStepMetadata(stepTestConfig);
-}, 100_000);
+}, 10_000);

@@ -26,7 +26,7 @@ test(
     const stepResults = await executeStepWithDependencies(stepTestConfig);
     expect(stepResults).toMatchStepMetadata(stepTestConfig);
   },
-  1000_000,
+  10_000,
 );
 
 test(
@@ -42,7 +42,7 @@ test(
     const stepResults = await executeStepWithDependencies(stepTestConfig);
     expect(stepResults).toMatchStepMetadata(stepTestConfig);
   },
-  1000_000,
+  10_000,
 );
 
 test(
@@ -58,7 +58,7 @@ test(
     const stepResults = await executeStepWithDependencies(stepTestConfig);
     expect(stepResults).toMatchStepMetadata(stepTestConfig);
   },
-  1000_000,
+  10_000,
 );
 
 test(
@@ -74,7 +74,7 @@ test(
     const stepResults = await executeStepWithDependencies(stepTestConfig);
     expect(stepResults).toMatchStepMetadata(stepTestConfig);
   },
-  1000_000,
+  10_000,
 );
 
 test(
@@ -90,5 +90,5 @@ test(
     const stepResults = await executeStepWithDependencies(stepTestConfig);
     expect(stepResults).toMatchStepMetadata(stepTestConfig);
   },
-  1000_000,
+  10_000,
 );
