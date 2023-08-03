@@ -139,7 +139,7 @@ export class ServiceNowClient {
                 },
                 'Hit Max API rate. Waiting for retry.',
               );
-              await this.sleep(1000 * Number(timeToWaitInMillis));
+              await this.sleep(Number(timeToWaitInMillis));
             }
           }
           return;
