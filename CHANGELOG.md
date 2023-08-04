@@ -1,3 +1,15 @@
+# v1.1.1 (Fri Aug 04 2023)
+
+#### 🐛 Bug Fix
+
+- Int 8940 make more efficient + Quality of life improvements [#45](https://github.com/JupiterOne/graph-servicenow/pull/45) (gonzaloavalosribas@Gonzalos-MacBook-Pro.local)
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v1.1.0 (Thu Aug 03 2023)
 
 #### 🚀 Enhancement
