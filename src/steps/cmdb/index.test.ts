@@ -18,7 +18,6 @@ test(
   Steps.CMDB,
   async () => {
     const stepTestConfig = getStepTestConfigForStep(Steps.CMDB);
-
     recording = setupServiceNowRecording({
       name: Steps.CMDB,
       directory: __dirname,

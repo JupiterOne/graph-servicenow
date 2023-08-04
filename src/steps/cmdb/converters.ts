@@ -5,6 +5,7 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { Entities } from '../../constants';
 import { CMDBItem } from '../../types';
+import { skippedRawDataSource } from '../../util/graphObject';
 
 export function createCMDBEntity(
   data: CMDBItem,
@@ -18,9 +19,10 @@ export function createCMDBEntity(
       customFields[key.split('_').join('-')] = JSON.stringify(value);
     }
   }
+
   return createIntegrationEntity({
     entityData: {
-      source: data,
+      source: skippedRawDataSource, // Raw data is really big.
       assign: {
         _class: Entities.CMDB_OBJECT._class,
         _type: Entities.CMDB_OBJECT._type,
@@ -42,6 +44,10 @@ export function createCMDBEntity(
         subcategory: data.subcategory,
         warrantyExpiration: parseTimePropertyValue(data.warranty_expiration),
         model: data.model_number,
+        managedBy: data.managed_by.value,
+        ownedBy: data.owned_by.value,
+        managedByGroup: data.managed_by_group.value,
+        assignedTo: data.assigned_to.value,
         createdOn: parseTimePropertyValue(data.sys_created_on),
         updatedOn: parseTimePropertyValue(data.sys_updated_on),
         ...customFields,
