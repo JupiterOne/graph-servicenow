@@ -1,3 +1,15 @@
+# v1.1.2 (Mon Aug 07 2023)
+
+#### 🐛 Bug Fix
+
+- Corrected converter [#46](https://github.com/JupiterOne/graph-servicenow/pull/46) (gonzaloavalosribas@Gonzalos-MacBook-Pro.local)
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v1.1.1 (Fri Aug 04 2023)
 
 #### 🐛 Bug Fix
