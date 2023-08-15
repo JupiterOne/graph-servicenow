@@ -20,46 +20,22 @@ export async function fetchCMDB(
   const { logger, instance, jobState } = context;
   const client = new ServiceNowClient(instance.config, logger);
   SysClassNamesParents = {};
-  const otherClassesIds: { [key: string]: string[] } = {};
 
   const parent = instance.config.cmdb_parent!;
 
   await client.iterateTableResources({
     table: parent,
+    limit: 1000,
     callback: async (resource: CMDBItem) => {
-      //If the class equals the cmdb_parent then ingest it as is.
-      if (resource.sys_class_name == parent) {
-        const sysClassNames = [
-          resource.sys_class_name,
-          ...(await getAllParents(client, resource.sys_class_name, logger)),
-        ];
-        if (!jobState.hasKey(resource.sys_id)) {
-          await jobState.addEntity(createCMDBEntity(resource, sysClassNames));
-        }
-      } else {
-        //If the class does not equal the cmdb_parent then save the class and id.
-        //This is probably a memory problem with larges amount of data. For now it makes it
-        //really efficient in ammount of calls. But not good in memory. Might need to be optimized.
-        if (!otherClassesIds[resource.sys_class_name]) {
-          otherClassesIds[resource.sys_class_name] = [];
-        }
-        otherClassesIds[resource.sys_class_name].push(resource.sys_id);
+      const sysClassNames = [
+        resource.sys_class_name,
+        ...(await getAllParents(client, resource.sys_class_name, logger)),
+      ];
+      if (!jobState.hasKey(resource.sys_id)) {
+        await jobState.addEntity(createCMDBEntity(resource, sysClassNames));
       }
     },
   });
-  //for all saved classes and ids, fetch the class and ingest.
-  for (const key in otherClassesIds) {
-    const sysClassNames = [key, ...(await getAllParents(client, key, logger))];
-    await client.iterateTableResources({
-      table: key,
-      callback: async (resource: CMDBItem) => {
-        if (!otherClassesIds[key].includes(resource.sys_id)) return;
-        if (!jobState.hasKey(resource.sys_id)) {
-          await jobState.addEntity(createCMDBEntity(resource, sysClassNames));
-        }
-      },
-    });
-  }
 }
 export async function buildUserManagesCMDB(
   context: IntegrationStepExecutionContext<IntegrationConfig>,
