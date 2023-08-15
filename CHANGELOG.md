@@ -1,3 +1,15 @@
+# v1.1.3 (Tue Aug 15 2023)
+
+#### 🐛 Bug Fix
+
+- Int 8940 fix step [#47](https://github.com/JupiterOne/graph-servicenow/pull/47) (gonzaloavalosribas@Gonzalos-MacBook-Pro.local)
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v1.1.2 (Mon Aug 07 2023)
 
 #### 🐛 Bug Fix
