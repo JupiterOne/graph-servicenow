@@ -25,7 +25,6 @@ export async function fetchCMDB(
 
   await client.iterateTableResources({
     table: parent,
-    limit: 1000,
     callback: async (resource: CMDBItem) => {
       const sysClassNames = [
         resource.sys_class_name,
