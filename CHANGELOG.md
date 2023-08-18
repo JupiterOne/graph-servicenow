@@ -1,3 +1,15 @@
+# v1.2.0 (Fri Aug 18 2023)
+
+#### 🚀 Enhancement
+
+- INT-9211 - add ingestion sources [#48](https://github.com/JupiterOne/graph-servicenow/pull/48) (ronald.arias@contractor.jupiterone.com)
+
+#### Authors: 1
+
+- Ronald Arias ([@RonaldEAM](https://github.com/RonaldEAM))
+
+---
+
 # v1.1.3 (Tue Aug 15 2023)
 
 #### 🐛 Bug Fix
