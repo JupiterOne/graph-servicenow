@@ -7,7 +7,12 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { CMDBItem, IntegrationConfig } from '../../types';
 import { ServiceNowClient, ServiceNowTable } from '../../client';
-import { Entities, Relationships, Steps } from '../../constants';
+import {
+  Entities,
+  IngestionSources,
+  Relationships,
+  Steps,
+} from '../../constants';
 import { createCMDBEntity } from './converters';
 
 let SysClassNamesParents: {
@@ -175,6 +180,7 @@ export const cmdbIntegrationSteps: Step<
 >[] = [
   {
     id: Steps.CMDB,
+    ingestionSourceId: IngestionSources.CMDB_ITEMS,
     name: 'CMDB Items',
     entities: [Entities.CMDB_OBJECT],
     relationships: [],
@@ -183,6 +189,7 @@ export const cmdbIntegrationSteps: Step<
   },
   {
     id: Steps.USER_MANAGES_CMDB,
+    ingestionSourceId: IngestionSources.CMDB_ITEMS,
     name: 'Build user manages CMDB',
     entities: [],
     relationships: [Relationships.USER_MANAGES_CMDB],
@@ -191,6 +198,7 @@ export const cmdbIntegrationSteps: Step<
   },
   {
     id: Steps.USER_OWNS_CMDB,
+    ingestionSourceId: IngestionSources.CMDB_ITEMS,
     name: 'Build user owns CMDB',
     entities: [],
     relationships: [Relationships.USER_OWNS_CMDB],
@@ -199,6 +207,7 @@ export const cmdbIntegrationSteps: Step<
   },
   {
     id: Steps.CMDB_ASSIGNED_USER,
+    ingestionSourceId: IngestionSources.CMDB_ITEMS,
     name: 'CMDB assigned to user',
     entities: [],
     relationships: [Relationships.CMDB_ASSIGNED_TO_USER],
@@ -207,6 +216,7 @@ export const cmdbIntegrationSteps: Step<
   },
   {
     id: Steps.GROUP_MANAGES_CMDB,
+    ingestionSourceId: IngestionSources.CMDB_ITEMS,
     name: 'Group manages CMDB',
     entities: [],
     relationships: [Relationships.GROUP_MANAGES_CMDB],

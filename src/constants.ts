@@ -1,5 +1,11 @@
 import { RelationshipClass } from '@jupiterone/integration-sdk-core';
 
+export const IngestionSources = {
+  GROUPS: 'groups',
+  INCIDENTS: 'incidents',
+  CMDB_ITEMS: 'cmdb_items',
+};
+
 export const Steps = {
   ACCOUNT: 'step-account',
   USERS: 'step-users',

@@ -6,7 +6,7 @@ import {
   Entity,
 } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from '../types';
-import { Steps, Entities, Relationships } from '../constants';
+import { Steps, Entities, Relationships, IngestionSources } from '../constants';
 import { ServiceNowClient } from '../client';
 import {
   createUserEntity,
@@ -151,6 +151,7 @@ export const sysSteps: Step<
   },
   {
     id: Steps.GROUPS,
+    ingestionSourceId: IngestionSources.GROUPS,
     name: 'Groups',
     entities: [Entities.GROUP],
     relationships: [
@@ -162,6 +163,7 @@ export const sysSteps: Step<
   },
   {
     id: Steps.GROUP_MEMBERS,
+    ingestionSourceId: IngestionSources.GROUPS,
     name: 'Group Members',
     entities: [],
     relationships: [Relationships.GROUP_HAS_USER],
@@ -170,6 +172,7 @@ export const sysSteps: Step<
   },
   {
     id: Steps.INCIDENTS,
+    ingestionSourceId: IngestionSources.INCIDENTS,
     name: 'Incidents',
     entities: [Entities.INCIDENT],
     relationships: [Relationships.INCIDENT_ASSIGNED_USER],
