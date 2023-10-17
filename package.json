@@ -2,6 +2,10 @@
   "name": "@jupiterone/graph-servicenow",
   "version": "1.2.0",
   "description": "A graph conversion tool for ServiceNow",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JupiterOne/graph-servicenow"
+  },
   "license": "MPL-2.0",
   "engines": {
     "node": ">=18.0.0 <19.x"
