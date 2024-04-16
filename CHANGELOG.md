@@ -1,3 +1,23 @@
+# v1.3.0 (Tue Apr 16 2024)
+
+#### 🚀 Enhancement
+
+- Fix TypeError: Cannot convert undefined or null to object [#49](https://github.com/JupiterOne/graph-servicenow/pull/49) ([@jehisonprada](https://github.com/jehisonprada))
+
+#### ⚠️ Pushed to `main`
+
+- Apply remove-codeql with multi-gitter [ci skip] ([@electricgull](https://github.com/electricgull))
+- Fix x-cortex-service-groups where tier-4 was set incorrectly ([@jablonnc](https://github.com/jablonnc))
+- Populate CODEOWENRS, baseline package.json and baseline cortex.yaml ([@jablonnc](https://github.com/jablonnc))
+
+#### Authors: 3
+
+- [@jehisonprada](https://github.com/jehisonprada)
+- Cameron Griffin ([@electricgull](https://github.com/electricgull))
+- Noah Jablonski ([@jablonnc](https://github.com/jablonnc))
+
+---
+
 # v1.2.0 (Fri Aug 18 2023)
 
 #### 🚀 Enhancement
