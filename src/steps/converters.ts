@@ -6,6 +6,14 @@ import {
   RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 import { Entities } from '../constants';
+import {
+  ServiceNowActiveEnum,
+  ServiceNowGroupMember,
+  ServiceNowIncident,
+  ServiceNowLink,
+  ServiceNowUser,
+  ServiceNowGroup,
+} from '../types';
 
 function convertCommonServiceNowProperties(
   serviceNowObject: any,
@@ -32,7 +40,7 @@ export function createAccountEntity(hostname: string): Entity {
   });
 }
 
-export function createUserEntity(user: any): Entity {
+export function createUserEntity(user: ServiceNowUser): Entity {
   delete user.user_password;
   return createIntegrationEntity({
     entityData: {
@@ -42,15 +50,16 @@ export function createUserEntity(user: any): Entity {
         _class: Entities.USER._class,
         _type: Entities.USER._type,
         _key: user.sys_id,
+        name: user.name,
         username: user.user_name,
-        active: user.active === 'true',
+        active: user.active === ServiceNowActiveEnum.TRUE,
         email: user.email ? user.email : undefined,
       },
     },
   });
 }
 
-export function createGroupEntity(group: any): Entity {
+export function createGroupEntity(group: ServiceNowGroup): Entity {
   return createIntegrationEntity({
     entityData: {
       source: group,
@@ -59,14 +68,14 @@ export function createGroupEntity(group: any): Entity {
         _class: Entities.GROUP._class,
         _type: Entities.GROUP._type,
         _key: group.sys_id,
-        active: group.active === 'true',
+        active: group.active === ServiceNowActiveEnum.TRUE,
         email: group.email ? group.email : undefined,
       },
     },
   });
 }
 
-export function createIncidentEntity(incident: any): Entity {
+export function createIncidentEntity(incident: ServiceNowIncident): Entity {
   return createIntegrationEntity({
     entityData: {
       source: incident,
@@ -82,7 +91,7 @@ export function createIncidentEntity(incident: any): Entity {
         reporter: incident.opened_by.value,
         impact: incident.impact,
         resolvedAt: incident.resolved_at,
-        active: incident.active === 'true',
+        active: incident.active === ServiceNowActiveEnum.TRUE,
         reportable: false,
       },
     },
@@ -90,7 +99,7 @@ export function createIncidentEntity(incident: any): Entity {
 }
 
 export function createIncidentAssigneeRelationship(
-  incident: any,
+  incident: ServiceNowIncident,
 ): Relationship {
   return createDirectRelationship({
     _class: RelationshipClass.ASSIGNED,
@@ -103,18 +112,20 @@ export function createIncidentAssigneeRelationship(
 
 export function createGroupGroupRelationship(
   groupEntity: Entity,
-  parent: { link: string; value: string },
+  groupLink: ServiceNowLink,
 ): Relationship {
   return createDirectRelationship({
     _class: RelationshipClass.HAS,
     fromType: Entities.GROUP._type,
-    fromKey: parent.value,
+    fromKey: groupLink.value,
     toType: Entities.GROUP._type,
     toKey: groupEntity._key,
   });
 }
 
-export function createGroupUserRelationship(groupUser: any): Relationship {
+export function createGroupUserRelationship(
+  groupUser: ServiceNowGroupMember,
+): Relationship {
   return createDirectRelationship({
     _class: RelationshipClass.HAS,
     fromType: Entities.GROUP._type,
