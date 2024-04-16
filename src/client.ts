@@ -1,15 +1,50 @@
 import axios, { AxiosError } from 'axios';
 import { retry } from '@lifeomic/attempt';
 
-import { IntegrationConfig } from './types';
+import {
+  IntegrationConfig,
+  PaginatedResponse,
+  ServiceNowUser,
+  ServiceNowGroup,
+  ServiceNowGroupMember,
+  ServiceNowIncident,
+  ServiceNowDatabaseTable,
+} from './types';
 import { getServiceNowNextLink } from './util/getServiceNowNextLink';
 import {
   IntegrationProviderAuthorizationError,
   IntegrationValidationError,
   IntegrationLogger,
 } from '@jupiterone/integration-sdk-core';
+import toJsonSchema from 'to-json-schema';
 
 type Iteratee<T = any> = (r: T) => void | Promise<void>;
+
+function getResponseShape(response: any): string {
+  try {
+    const shape = toJsonSchema(response, {
+      arrays: {
+        mode: 'first',
+      },
+      postProcessFnc: (
+        type: string,
+        schema: any,
+        value: any,
+        commmonPostProcessDefault: (
+          type: string,
+          schema: any,
+          value: any,
+        ) => any,
+      ): any =>
+        type === 'array'
+          ? { ...schema, length: value.length }
+          : commmonPostProcessDefault(type, schema, value),
+    });
+    return `Response shape: ${JSON.stringify(shape)}`;
+  } catch (err) {
+    return `Error getting response shape: ${err}`;
+  }
+}
 
 export enum ServiceNowTable {
   USER = 'sys_user',
@@ -108,15 +143,25 @@ export class ServiceNowClient {
     });
   }
 
-  async retryResourceRequest(
-    url: string,
-  ): Promise<object[] & { nextLink: string | undefined }> {
+  async retryResourceRequest<T>(url: string): Promise<T> {
     return retry(
       async () => {
         const response = await this.request({ url });
-        return Object.assign(response.data.result, {
-          nextLink: getServiceNowNextLink(response?.headers?.link),
-        });
+        const result = response?.data?.result;
+
+        this.logger.info(
+          {
+            resource: url,
+            schema: getResponseShape(response?.data),
+          },
+          'Response schema',
+        );
+
+        if (Array.isArray(result)) {
+          const nextLink = getServiceNowNextLink(response?.headers?.link);
+          return { result, nextLink };
+        }
+        return result;
       },
       {
         maxAttempts: 3,
@@ -151,16 +196,17 @@ export class ServiceNowClient {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  async fetchTableResource(options: {
+  async fetchTableResource<T>(options: {
     table: string;
     limit?: number;
     query?: { [key: string]: string };
-  }): Promise<object[] & { nextLink: string | undefined }> {
+  }): Promise<T> {
     return this.retryResourceRequest(this.createRequestUrl(options));
   }
-  async iterateTableResources(options: {
+
+  async iterateTableResources<T>(options: {
     table: string;
-    callback: Iteratee;
+    callback: Iteratee<T>;
     query?: { [key: string]: string };
     limit?: number;
   }) {
@@ -171,46 +217,50 @@ export class ServiceNowClient {
       query,
     });
     do {
-      const resources = await this.retryResourceRequest(url);
+      const { result, nextLink } = await this.retryResourceRequest<
+        PaginatedResponse<T>
+      >(url);
 
-      for (const r of resources) {
-        await callback(r);
+      if (Array.isArray(result)) {
+        for (const r of result) {
+          await callback(r);
+        }
+
+        this.logger.info(
+          {
+            resourceCount: result.length,
+            resource: url,
+          },
+          'Received resources for endpoint',
+        );
       }
-
-      this.logger.info(
-        {
-          resourceCount: resources.length,
-          resource: url,
-        },
-        'Received resources for endpoint',
-      );
-      url = resources.nextLink;
+      url = nextLink;
     } while (url);
   }
 
-  async iterateUsers(callback: Iteratee) {
-    return this.iterateTableResources({
+  async iterateUsers(callback: Iteratee<ServiceNowUser>) {
+    return this.iterateTableResources<ServiceNowUser>({
       table: ServiceNowTable.USER,
       callback,
     });
   }
 
-  async iterateGroups(callback: Iteratee) {
-    return this.iterateTableResources({
+  async iterateGroups(callback: Iteratee<ServiceNowGroup>) {
+    return this.iterateTableResources<ServiceNowGroup>({
       table: ServiceNowTable.USER_GROUP,
       callback,
     });
   }
 
-  async iterateGroupMembers(callback: Iteratee) {
-    return this.iterateTableResources({
+  async iterateGroupMembers(callback: Iteratee<ServiceNowGroupMember>) {
+    return this.iterateTableResources<ServiceNowGroupMember>({
       table: ServiceNowTable.GROUP_MEMBER,
       callback,
     });
   }
 
-  async iterateIncidents(callback: Iteratee) {
-    return this.iterateTableResources({
+  async iterateIncidents(callback: Iteratee<ServiceNowIncident>) {
+    return this.iterateTableResources<ServiceNowIncident>({
       table: ServiceNowTable.INCIDENT,
       callback,
     });
@@ -218,7 +268,7 @@ export class ServiceNowClient {
 
   async listTableNames(tableNamePrefix: string = ''): Promise<string[]> {
     const tableNames: string[] = [];
-    await this.iterateTableResources({
+    await this.iterateTableResources<ServiceNowDatabaseTable>({
       table: ServiceNowTable.DATABASE_TABLES,
       callback: (t) => {
         if ((t.name as string).startsWith(tableNamePrefix)) {

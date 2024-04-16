@@ -114,3 +114,60 @@ export type DictionaryItem = {
   super_class: Asset | undefined;
   name: string;
 };
+
+export interface PaginatedResponse<T> {
+  result: T[];
+  nextLink?: string;
+}
+
+export interface ServiceNowBase {
+  sys_id: string;
+  sys_created_on: string;
+  sys_updated_on: string;
+}
+
+export interface ServiceNowLink {
+  link: string;
+  value: string;
+}
+
+export enum ServiceNowActiveEnum {
+  TRUE = 'true',
+  FALSE = 'false',
+}
+
+export interface ServiceNowUser extends ServiceNowBase {
+  name: string;
+  user_name: string;
+  active: ServiceNowActiveEnum;
+  email: string;
+  user_password?: string;
+}
+
+export interface ServiceNowGroup extends ServiceNowBase {
+  name: string;
+  active: ServiceNowActiveEnum;
+  email: string;
+  parent: ServiceNowLink;
+}
+
+export interface ServiceNowIncident extends ServiceNowBase {
+  number: string;
+  severity: string;
+  category: string;
+  opened_by: ServiceNowLink;
+  impact: number;
+  resolved_at: string;
+  active: ServiceNowActiveEnum;
+  assigned_to: ServiceNowLink;
+}
+
+export interface ServiceNowGroupMember extends ServiceNowBase {
+  group: ServiceNowLink;
+  user: ServiceNowLink;
+}
+
+export interface ServiceNowDatabaseTable extends ServiceNowBase {
+  name: string;
+  super_class: ServiceNowLink;
+}

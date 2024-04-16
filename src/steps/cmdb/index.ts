@@ -5,7 +5,12 @@ import {
   Step,
   createDirectRelationship,
 } from '@jupiterone/integration-sdk-core';
-import { CMDBItem, IntegrationConfig } from '../../types';
+import {
+  CMDBItem,
+  IntegrationConfig,
+  PaginatedResponse,
+  ServiceNowDatabaseTable,
+} from '../../types';
 import { ServiceNowClient, ServiceNowTable } from '../../client';
 import {
   Entities,
@@ -148,15 +153,19 @@ async function getAllParents(
     return [];
   }
   if (!SysClassNamesParents[sysClassName]) {
-    const dictionaryClass = (await client.fetchTableResource({
+    const { result: dictionaryClass } = await client.fetchTableResource<
+      PaginatedResponse<ServiceNowDatabaseTable>
+    >({
       table: ServiceNowTable.SYS_DICTIONARY,
       query: { name: sysClassName, sysparm_fields: 'super_class,name' },
-    })) as any;
+    });
     try {
-      const newParent = await client.retryResourceRequest(
+      const newParent = await client.retryResourceRequest<
+        ServiceNowDatabaseTable
+      >(
         `${dictionaryClass[0].super_class.link}?sysparm_fields=super_class,name`,
       );
-      SysClassNamesParents[dictionaryClass[0].name] = (newParent as any).name;
+      SysClassNamesParents[dictionaryClass[0].name] = newParent.name;
     } catch (error) {
       logger.error({ error }, 'Could not find super class');
       return [];

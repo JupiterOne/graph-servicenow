@@ -45,7 +45,8 @@
   },
   "dependencies": {
     "@lifeomic/attempt": "^3.0.3",
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "to-json-schema": "^0.2.5"
   },
   "auto": {
     "plugins": [
