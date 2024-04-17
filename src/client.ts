@@ -206,7 +206,7 @@ export class ServiceNowClient {
       >(url);
 
       // For some reason Servicenow API sometimes have string responses for paginated endpoints
-      if (paginatedResponse.result && Array.isArray(paginatedResponse.result)) {
+      if (paginatedResponse?.result && Array.isArray(paginatedResponse.result)) {
         for (const r of paginatedResponse.result) {
           await callback(r);
         }
