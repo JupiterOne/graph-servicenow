@@ -16,35 +16,8 @@ import {
   IntegrationValidationError,
   IntegrationLogger,
 } from '@jupiterone/integration-sdk-core';
-import toJsonSchema from 'to-json-schema';
 
 type Iteratee<T = any> = (r: T) => void | Promise<void>;
-
-function getResponseShape(response: any): string {
-  try {
-    const shape = toJsonSchema(response, {
-      arrays: {
-        mode: 'first',
-      },
-      postProcessFnc: (
-        type: string,
-        schema: any,
-        value: any,
-        commmonPostProcessDefault: (
-          type: string,
-          schema: any,
-          value: any,
-        ) => any,
-      ): any =>
-        type === 'array'
-          ? { ...schema, length: value.length }
-          : commmonPostProcessDefault(type, schema, value),
-    });
-    return `Response shape: ${JSON.stringify(shape)}`;
-  } catch (err) {
-    return `Error getting response shape: ${err}`;
-  }
-}
 
 export enum ServiceNowTable {
   USER = 'sys_user',
@@ -149,12 +122,18 @@ export class ServiceNowClient {
         const response = await this.request({ url });
         const result = response?.data?.result;
 
+        const redactedResponse = {
+          status: response.status,
+          statusText: response.statusText,
+          headers: response.headers,
+          responseLength: response.data?.['length'],
+          responseType: typeof response.data,
+        };
         this.logger.info(
           {
-            resource: url,
-            schema: getResponseShape(response?.data),
+            redactedResponse,
           },
-          'Response schema',
+          'Redacted response log',
         );
 
         if (Array.isArray(result)) {
@@ -166,6 +145,10 @@ export class ServiceNowClient {
       {
         maxAttempts: 3,
         handleError: async (error) => {
+          this.logger.error(
+            { code: error.code, error, url },
+            'Error retrying request',
+          );
           if (
             error instanceof AxiosError &&
             (error as AxiosError).response?.status === 429
@@ -192,7 +175,8 @@ export class ServiceNowClient {
       },
     );
   }
-  async sleep(ms) {
+
+  async sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
@@ -217,24 +201,25 @@ export class ServiceNowClient {
       query,
     });
     do {
-      const { result, nextLink } = await this.retryResourceRequest<
+      const paginatedResponse: PaginatedResponse<T> = await this.retryResourceRequest<
         PaginatedResponse<T>
       >(url);
 
-      if (Array.isArray(result)) {
-        for (const r of result) {
+      // For some reason Servicenow API sometimes have string responses for paginated endpoints
+      if (paginatedResponse?.result && Array.isArray(paginatedResponse.result)) {
+        for (const r of paginatedResponse.result) {
           await callback(r);
         }
 
         this.logger.info(
           {
-            resourceCount: result.length,
+            resourceCount: paginatedResponse.result.length,
             resource: url,
           },
           'Received resources for endpoint',
         );
       }
-      url = nextLink;
+      url = paginatedResponse?.nextLink;
     } while (url);
   }
 
