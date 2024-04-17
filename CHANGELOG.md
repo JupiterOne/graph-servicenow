@@ -1,3 +1,15 @@
+# v1.3.1 (Wed Apr 17 2024)
+
+#### 🐛 Bug Fix
+
+- Add debug logs [#50](https://github.com/JupiterOne/graph-servicenow/pull/50) ([@jehisonprada](https://github.com/jehisonprada))
+
+#### Authors: 1
+
+- [@jehisonprada](https://github.com/jehisonprada)
+
+---
+
 # v1.3.0 (Tue Apr 16 2024)
 
 #### 🚀 Enhancement
