@@ -161,7 +161,8 @@ async function getAllParents(
     });
     try {
       if (
-        dictionariesPaginatedResponse.result &&
+        dictionariesPaginatedResponse?.result &&
+        Array.isArray(dictionariesPaginatedResponse) &&
         dictionariesPaginatedResponse.result.length > 0
       ) {
         const dictionaryClass = dictionariesPaginatedResponse.result[0];
