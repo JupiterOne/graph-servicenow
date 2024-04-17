@@ -153,19 +153,25 @@ async function getAllParents(
     return [];
   }
   if (!SysClassNamesParents[sysClassName]) {
-    const { result: dictionaryClass } = await client.fetchTableResource<
+    const dictionariesPaginatedResponse: PaginatedResponse<ServiceNowDatabaseTable> = await client.fetchTableResource<
       PaginatedResponse<ServiceNowDatabaseTable>
     >({
       table: ServiceNowTable.SYS_DICTIONARY,
       query: { name: sysClassName, sysparm_fields: 'super_class,name' },
     });
     try {
-      const newParent = await client.retryResourceRequest<
-        ServiceNowDatabaseTable
-      >(
-        `${dictionaryClass[0].super_class.link}?sysparm_fields=super_class,name`,
-      );
-      SysClassNamesParents[dictionaryClass[0].name] = newParent.name;
+      if (
+        dictionariesPaginatedResponse.result &&
+        dictionariesPaginatedResponse.result.length > 0
+      ) {
+        const dictionaryClass = dictionariesPaginatedResponse.result[0];
+        const newParent = await client.retryResourceRequest<
+          ServiceNowDatabaseTable
+        >(
+          `${dictionaryClass.super_class.link}?sysparm_fields=super_class,name`,
+        );
+        SysClassNamesParents[dictionaryClass.name] = newParent.name;
+      }
     } catch (error) {
       logger.error({ error }, 'Could not find super class');
       return [];

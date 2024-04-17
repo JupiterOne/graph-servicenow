@@ -122,24 +122,33 @@ export class ServiceNowClient {
         const response = await this.request({ url });
         const result = response?.data?.result;
 
+        const redactedResponse = {
+          status: response.status,
+          statusText: response.statusText,
+          headers: response.headers,
+          responseLength: response.data?.['length'],
+          responseType: typeof response.data,
+        };
+        this.logger.info(
+          {
+            redactedResponse,
+          },
+          'Redacted response log',
+        );
+
         if (Array.isArray(result)) {
           const nextLink = getServiceNowNextLink(response?.headers?.link);
           return { result, nextLink };
-        } else {
-          // Temporary log to understand why we get non paginated responses for endpoint that are supposed to be paginated
-          this.logger.info(
-            {
-              resource: url,
-              schema: JSON.stringify(response?.data),
-            },
-            'Response schema',
-          );
         }
         return result;
       },
       {
         maxAttempts: 3,
         handleError: async (error) => {
+          this.logger.error(
+            { code: error.code, error, url },
+            'Error retrying request',
+          );
           if (
             error instanceof AxiosError &&
             (error as AxiosError).response?.status === 429
@@ -166,7 +175,8 @@ export class ServiceNowClient {
       },
     );
   }
-  async sleep(ms) {
+
+  async sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
@@ -191,12 +201,12 @@ export class ServiceNowClient {
       query,
     });
     do {
-      const paginatedResponse = await this.retryResourceRequest<
+      const paginatedResponse: PaginatedResponse<T> = await this.retryResourceRequest<
         PaginatedResponse<T>
       >(url);
 
-      // FOr some reason Servicenow API sometimes have string responses for paginated endpoints
-      if (Array.isArray(paginatedResponse.result)) {
+      // For some reason Servicenow API sometimes have string responses for paginated endpoints
+      if (paginatedResponse.result && Array.isArray(paginatedResponse.result)) {
         for (const r of paginatedResponse.result) {
           await callback(r);
         }
@@ -209,7 +219,7 @@ export class ServiceNowClient {
           'Received resources for endpoint',
         );
       }
-      url = paginatedResponse.nextLink;
+      url = paginatedResponse?.nextLink;
     } while (url);
   }
 
