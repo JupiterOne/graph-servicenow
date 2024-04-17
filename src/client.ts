@@ -16,35 +16,8 @@ import {
   IntegrationValidationError,
   IntegrationLogger,
 } from '@jupiterone/integration-sdk-core';
-import toJsonSchema from 'to-json-schema';
 
 type Iteratee<T = any> = (r: T) => void | Promise<void>;
-
-function getResponseShape(response: any): string {
-  try {
-    const shape = toJsonSchema(response, {
-      arrays: {
-        mode: 'first',
-      },
-      postProcessFnc: (
-        type: string,
-        schema: any,
-        value: any,
-        commmonPostProcessDefault: (
-          type: string,
-          schema: any,
-          value: any,
-        ) => any,
-      ): any =>
-        type === 'array'
-          ? { ...schema, length: value.length }
-          : commmonPostProcessDefault(type, schema, value),
-    });
-    return `Response shape: ${JSON.stringify(shape)}`;
-  } catch (err) {
-    return `Error getting response shape: ${err}`;
-  }
-}
 
 export enum ServiceNowTable {
   USER = 'sys_user',
@@ -149,17 +122,18 @@ export class ServiceNowClient {
         const response = await this.request({ url });
         const result = response?.data?.result;
 
-        this.logger.info(
-          {
-            resource: url,
-            schema: getResponseShape(response?.data),
-          },
-          'Response schema',
-        );
-
         if (Array.isArray(result)) {
           const nextLink = getServiceNowNextLink(response?.headers?.link);
           return { result, nextLink };
+        } else {
+          // Temporary log to understand why we get non paginated responses for endpoint that are supposed to be paginated
+          this.logger.info(
+            {
+              resource: url,
+              schema: JSON.stringify(response?.data),
+            },
+            'Response schema',
+          );
         }
         return result;
       },
@@ -217,24 +191,25 @@ export class ServiceNowClient {
       query,
     });
     do {
-      const { result, nextLink } = await this.retryResourceRequest<
+      const paginatedResponse = await this.retryResourceRequest<
         PaginatedResponse<T>
       >(url);
 
-      if (Array.isArray(result)) {
-        for (const r of result) {
+      // FOr some reason Servicenow API sometimes have string responses for paginated endpoints
+      if (Array.isArray(paginatedResponse.result)) {
+        for (const r of paginatedResponse.result) {
           await callback(r);
         }
 
         this.logger.info(
           {
-            resourceCount: result.length,
+            resourceCount: paginatedResponse.result.length,
             resource: url,
           },
           'Received resources for endpoint',
         );
       }
-      url = nextLink;
+      url = paginatedResponse.nextLink;
     } while (url);
   }
 
