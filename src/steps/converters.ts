@@ -107,7 +107,7 @@ export function createIncidentAssigneeRelationship(
     fromType: Entities.INCIDENT._type,
     fromKey: incident.sys_id,
     toType: Entities.USER._type,
-    toKey: incident.assigned_to?.value,
+    toKey: incident.assigned_to.value,
   });
 }
 
@@ -118,7 +118,7 @@ export function createGroupGroupRelationship(
   return createDirectRelationship({
     _class: RelationshipClass.HAS,
     fromType: Entities.GROUP._type,
-    fromKey: groupLink?.value,
+    fromKey: groupLink.value,
     toType: Entities.GROUP._type,
     toKey: groupEntity._key,
   });
@@ -130,9 +130,9 @@ export function createGroupUserRelationship(
   return createDirectRelationship({
     _class: RelationshipClass.HAS,
     fromType: Entities.GROUP._type,
-    fromKey: groupUser.group?.value,
+    fromKey: groupUser.group.value,
     toType: Entities.USER._type,
-    toKey: groupUser.user?.value,
+    toKey: groupUser.user.value,
     properties: convertCommonServiceNowProperties(groupUser),
   });
 }
