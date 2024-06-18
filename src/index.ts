@@ -12,5 +12,6 @@ export const invocationConfig: IntegrationInvocationConfig<IntegrationConfig> = 
   validateInvocation,
   getStepStartStates,
   integrationSteps: integrationSteps,
+  dependencyGraphOrder: ['last'],
   ingestionConfig,
 };

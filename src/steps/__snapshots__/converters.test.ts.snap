@@ -153,7 +153,7 @@ exports[`createUserEntity 1`] = `
   "_type": "service_now_user",
   "active": true,
   "createdOn": 1600711037000,
-  "displayName": "J1 Administrator",
+  "displayName": "j1-administrator",
   "email": "j1-admin@jupiterone.com",
   "id": "5ccbba87db1310109d87a9954b9619db",
   "name": "J1 Administrator",

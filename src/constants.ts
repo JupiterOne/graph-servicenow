@@ -13,10 +13,6 @@ export const Steps = {
   GROUP_MEMBERS: 'step-group-members',
   INCIDENTS: 'step-incidents',
   CMDB: 'step-cmdb',
-  USER_OWNS_CMDB: 'step_user_owns_cmdb',
-  USER_MANAGES_CMDB: 'step_user_manages_cmdb',
-  GROUP_MANAGES_CMDB: 'step_group_manages_cmdb',
-  CMDB_ASSIGNED_USER: 'step_cmdb_assigned_user',
 };
 
 export const Entities = {
@@ -49,6 +45,9 @@ export const Entities = {
     _type: 'service_now_cmdb_object',
     _class: 'Configuration',
     disableClassMatch: true,
+    indexMetadata: {
+      enabled: false,
+    },
   },
 };
 

@@ -35,113 +35,80 @@ export async function fetchCMDB(
 
   await client.iterateTableResources({
     table: parent,
+    limit: 3_000,
     callback: async (resource: CMDBItem) => {
       const sysClassNames = [
         resource.sys_class_name,
         ...(await getAllParents(client, resource.sys_class_name, logger)),
       ];
       if (!jobState.hasKey(resource.sys_id)) {
-        await jobState.addEntity(createCMDBEntity(resource, sysClassNames));
+        const cmdbEntity = createCMDBEntity(resource, sysClassNames);
+        await jobState.addEntity(cmdbEntity);
+
+        if (
+          cmdbEntity.managedBy &&
+          jobState.hasKey(cmdbEntity.managedBy as string)
+        ) {
+          await jobState.addRelationship(
+            createDirectRelationship({
+              _class: RelationshipClass.MANAGES,
+              fromKey: cmdbEntity.managedBy as string,
+              fromType: Entities.USER._type,
+              toKey: cmdbEntity._key,
+              toType: cmdbEntity._type,
+            }),
+          );
+        }
+
+        if (
+          cmdbEntity.ownedBy &&
+          jobState.hasKey(cmdbEntity.ownedBy as string)
+        ) {
+          await jobState.addRelationship(
+            createDirectRelationship({
+              _class: RelationshipClass.OWNS,
+              fromKey: cmdbEntity.ownedBy as string,
+              fromType: Entities.USER._type,
+              toKey: cmdbEntity._key,
+              toType: cmdbEntity._type,
+            }),
+          );
+        }
+
+        if (
+          cmdbEntity.managedByGroup &&
+          jobState.hasKey(cmdbEntity.managedByGroup as string)
+        ) {
+          await jobState.addRelationship(
+            createDirectRelationship({
+              _class: RelationshipClass.MANAGES,
+              fromKey: cmdbEntity.managedByGroup as string,
+              fromType: Entities.GROUP._type,
+              toKey: cmdbEntity._key,
+              toType: cmdbEntity._type,
+            }),
+          );
+        }
+
+        if (
+          cmdbEntity.assignedTo &&
+          jobState.hasKey(cmdbEntity.assignedTo as string)
+        ) {
+          await jobState.addRelationship(
+            createDirectRelationship({
+              _class: RelationshipClass.ASSIGNED,
+              toKey: cmdbEntity.assignedTo as string,
+              toType: Entities.USER._type,
+              fromKey: cmdbEntity._key,
+              fromType: cmdbEntity._type,
+            }),
+          );
+        }
       }
     },
   });
 }
-export async function buildUserManagesCMDB(
-  context: IntegrationStepExecutionContext<IntegrationConfig>,
-) {
-  const { jobState } = context;
-  await jobState.iterateEntities(
-    { _type: Entities.CMDB_OBJECT._type },
-    async (cmdbEntity) => {
-      const userId = (cmdbEntity as any).managedBy;
-      if (!userId) {
-        return;
-      }
-      const userEntity = await jobState.findEntity(userId);
-      if (userEntity) {
-        await jobState.addRelationship(
-          createDirectRelationship({
-            _class: RelationshipClass.MANAGES,
-            from: userEntity,
-            to: cmdbEntity,
-          }),
-        );
-      }
-    },
-  );
-}
-export async function buildUserOwnsCMDB(
-  context: IntegrationStepExecutionContext<IntegrationConfig>,
-) {
-  const { jobState } = context;
-  await jobState.iterateEntities(
-    { _type: Entities.CMDB_OBJECT._type },
-    async (cmdbEntity) => {
-      const userId = (cmdbEntity as any).ownedBy;
-      if (!userId) {
-        return;
-      }
-      const userEntity = await jobState.findEntity(userId);
-      if (userEntity) {
-        await jobState.addRelationship(
-          createDirectRelationship({
-            _class: RelationshipClass.OWNS,
-            from: userEntity,
-            to: cmdbEntity,
-          }),
-        );
-      }
-    },
-  );
-}
-export async function buildGroupManagesCMDB(
-  context: IntegrationStepExecutionContext<IntegrationConfig>,
-) {
-  const { jobState } = context;
-  await jobState.iterateEntities(
-    { _type: Entities.CMDB_OBJECT._type },
-    async (cmdbEntity) => {
-      const groupId = (cmdbEntity as any).managedByGroup;
-      if (!groupId) {
-        return;
-      }
-      const groupEntity = await jobState.findEntity(groupId);
-      if (groupEntity) {
-        await jobState.addRelationship(
-          createDirectRelationship({
-            _class: RelationshipClass.MANAGES,
-            from: groupEntity,
-            to: cmdbEntity,
-          }),
-        );
-      }
-    },
-  );
-}
-export async function buildCMDBAssignedUser(
-  context: IntegrationStepExecutionContext<IntegrationConfig>,
-) {
-  const { jobState } = context;
-  await jobState.iterateEntities(
-    { _type: Entities.CMDB_OBJECT._type },
-    async (cmdbEntity) => {
-      const userId = (cmdbEntity as any).assignedTo;
-      if (!userId) {
-        return;
-      }
-      const userEntity = await jobState.findEntity(userId);
-      if (userEntity) {
-        await jobState.addRelationship(
-          createDirectRelationship({
-            _class: RelationshipClass.ASSIGNED,
-            from: cmdbEntity,
-            to: userEntity,
-          }),
-        );
-      }
-    },
-  );
-}
+
 async function getAllParents(
   client: ServiceNowClient,
   sysClassName: string,
@@ -198,44 +165,14 @@ export const cmdbIntegrationSteps: Step<
     ingestionSourceId: IngestionSources.CMDB_ITEMS,
     name: 'CMDB Items',
     entities: [Entities.CMDB_OBJECT],
-    relationships: [],
+    relationships: [
+      Relationships.USER_MANAGES_CMDB,
+      Relationships.USER_OWNS_CMDB,
+      Relationships.CMDB_ASSIGNED_TO_USER,
+      Relationships.GROUP_MANAGES_CMDB,
+    ],
     dependsOn: [],
+    dependencyGraphId: 'last',
     executionHandler: fetchCMDB,
-  },
-  {
-    id: Steps.USER_MANAGES_CMDB,
-    ingestionSourceId: IngestionSources.CMDB_ITEMS,
-    name: 'Build user manages CMDB',
-    entities: [],
-    relationships: [Relationships.USER_MANAGES_CMDB],
-    dependsOn: [Steps.CMDB, Steps.USERS],
-    executionHandler: buildUserManagesCMDB,
-  },
-  {
-    id: Steps.USER_OWNS_CMDB,
-    ingestionSourceId: IngestionSources.CMDB_ITEMS,
-    name: 'Build user owns CMDB',
-    entities: [],
-    relationships: [Relationships.USER_OWNS_CMDB],
-    dependsOn: [Steps.CMDB, Steps.USERS],
-    executionHandler: buildUserOwnsCMDB,
-  },
-  {
-    id: Steps.CMDB_ASSIGNED_USER,
-    ingestionSourceId: IngestionSources.CMDB_ITEMS,
-    name: 'CMDB assigned to user',
-    entities: [],
-    relationships: [Relationships.CMDB_ASSIGNED_TO_USER],
-    dependsOn: [Steps.CMDB, Steps.USERS],
-    executionHandler: buildCMDBAssignedUser,
-  },
-  {
-    id: Steps.GROUP_MANAGES_CMDB,
-    ingestionSourceId: IngestionSources.CMDB_ITEMS,
-    name: 'Group manages CMDB',
-    entities: [],
-    relationships: [Relationships.GROUP_MANAGES_CMDB],
-    dependsOn: [Steps.CMDB, Steps.GROUPS],
-    executionHandler: buildGroupManagesCMDB,
   },
 ];

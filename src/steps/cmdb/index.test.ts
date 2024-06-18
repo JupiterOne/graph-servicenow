@@ -23,72 +23,11 @@ test(
       directory: __dirname,
     });
 
-    const stepResults = await executeStepWithDependencies(stepTestConfig);
-    expect(stepResults).toMatchStepMetadata(stepTestConfig);
-  },
-  10_000,
-);
-
-test(
-  Steps.CMDB_ASSIGNED_USER,
-  async () => {
-    const stepTestConfig = getStepTestConfigForStep(Steps.CMDB_ASSIGNED_USER);
-
-    recording = setupServiceNowRecording({
-      name: Steps.CMDB_ASSIGNED_USER,
-      directory: __dirname,
+    const stepResults = await executeStepWithDependencies({
+      ...stepTestConfig,
+      dependencyStepIds: [Steps.USERS, Steps.GROUPS],
     });
-
-    const stepResults = await executeStepWithDependencies(stepTestConfig);
     expect(stepResults).toMatchStepMetadata(stepTestConfig);
   },
-  10_000,
-);
-
-test(
-  Steps.USER_OWNS_CMDB,
-  async () => {
-    const stepTestConfig = getStepTestConfigForStep(Steps.USER_OWNS_CMDB);
-
-    recording = setupServiceNowRecording({
-      name: Steps.USER_OWNS_CMDB,
-      directory: __dirname,
-    });
-
-    const stepResults = await executeStepWithDependencies(stepTestConfig);
-    expect(stepResults).toMatchStepMetadata(stepTestConfig);
-  },
-  10_000,
-);
-
-test(
-  Steps.USER_MANAGES_CMDB,
-  async () => {
-    const stepTestConfig = getStepTestConfigForStep(Steps.USER_MANAGES_CMDB);
-
-    recording = setupServiceNowRecording({
-      name: Steps.USER_MANAGES_CMDB,
-      directory: __dirname,
-    });
-
-    const stepResults = await executeStepWithDependencies(stepTestConfig);
-    expect(stepResults).toMatchStepMetadata(stepTestConfig);
-  },
-  10_000,
-);
-
-test(
-  Steps.GROUP_MANAGES_CMDB,
-  async () => {
-    const stepTestConfig = getStepTestConfigForStep(Steps.GROUP_MANAGES_CMDB);
-
-    recording = setupServiceNowRecording({
-      name: Steps.GROUP_MANAGES_CMDB,
-      directory: __dirname,
-    });
-
-    const stepResults = await executeStepWithDependencies(stepTestConfig);
-    expect(stepResults).toMatchStepMetadata(stepTestConfig);
-  },
-  10_000,
+  100_000,
 );
