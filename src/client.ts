@@ -122,20 +122,6 @@ export class ServiceNowClient {
         const response = await this.request({ url });
         const result = response?.data?.result;
 
-        const redactedResponse = {
-          status: response.status,
-          statusText: response.statusText,
-          headers: response.headers,
-          responseLength: response.data?.['length'],
-          responseType: typeof response.data,
-        };
-        this.logger.info(
-          {
-            redactedResponse,
-          },
-          'Redacted response log',
-        );
-
         if (Array.isArray(result)) {
           const nextLink = getServiceNowNextLink(response?.headers?.link);
           return { result, nextLink };
@@ -206,18 +192,13 @@ export class ServiceNowClient {
       >(url);
 
       // For some reason Servicenow API sometimes have string responses for paginated endpoints
-      if (paginatedResponse?.result && Array.isArray(paginatedResponse.result)) {
+      if (
+        paginatedResponse?.result &&
+        Array.isArray(paginatedResponse.result)
+      ) {
         for (const r of paginatedResponse.result) {
           await callback(r);
         }
-
-        this.logger.info(
-          {
-            resourceCount: paginatedResponse.result.length,
-            resource: url,
-          },
-          'Received resources for endpoint',
-        );
       }
       url = paginatedResponse?.nextLink;
     } while (url);

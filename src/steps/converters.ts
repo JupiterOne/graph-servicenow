@@ -51,6 +51,7 @@ export function createUserEntity(user: ServiceNowUser): Entity {
         _type: Entities.USER._type,
         _key: user.sys_id,
         name: user.name,
+        displayName: user.user_name,
         username: user.user_name,
         active: user.active === ServiceNowActiveEnum.TRUE,
         email: user.email ? user.email : undefined,
@@ -88,7 +89,7 @@ export function createIncidentEntity(incident: ServiceNowIncident): Entity {
         displayName: incident.number,
         severity: incident.severity,
         category: incident.category,
-        reporter: incident.opened_by.value,
+        reporter: incident.opened_by?.value,
         impact: incident.impact,
         resolvedAt: incident.resolved_at,
         active: incident.active === ServiceNowActiveEnum.TRUE,
@@ -106,7 +107,7 @@ export function createIncidentAssigneeRelationship(
     fromType: Entities.INCIDENT._type,
     fromKey: incident.sys_id,
     toType: Entities.USER._type,
-    toKey: incident.assigned_to.value,
+    toKey: incident.assigned_to?.value,
   });
 }
 
@@ -117,7 +118,7 @@ export function createGroupGroupRelationship(
   return createDirectRelationship({
     _class: RelationshipClass.HAS,
     fromType: Entities.GROUP._type,
-    fromKey: groupLink.value,
+    fromKey: groupLink?.value,
     toType: Entities.GROUP._type,
     toKey: groupEntity._key,
   });
@@ -129,9 +130,9 @@ export function createGroupUserRelationship(
   return createDirectRelationship({
     _class: RelationshipClass.HAS,
     fromType: Entities.GROUP._type,
-    fromKey: groupUser.group.value,
+    fromKey: groupUser.group?.value,
     toType: Entities.USER._type,
-    toKey: groupUser.user.value,
+    toKey: groupUser.user?.value,
     properties: convertCommonServiceNowProperties(groupUser),
   });
 }

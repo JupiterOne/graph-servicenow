@@ -14,14 +14,14 @@ export function createTestConfig(hostname: string): IntegrationConfig {
     hostname: process.env.HOSTNAME || hostname,
     username: process.env.USERNAME || 'default-username',
     password: process.env.PASSWORD || 'default-password',
-    cmdb_parent: process.env.CMDB_PARENT || 'cmdb_ci_service_business',
+    cmdb_parent: process.env.CMDB_PARENT || 'cmdb_ci_server',
   };
 }
 export const configFromEnv: IntegrationConfig = {
-  hostname: process.env.HOSTNAME || 'dev122002.service-now.com',
+  hostname: process.env.HOSTNAME || 'dev195472.service-now.com',
   username: process.env.USERNAME || 'default-username',
   password: process.env.PASSWORD || 'default-password',
-  cmdb_parent: process.env.CMDB_PARENT || 'cmdb_ci_linux_server',
+  cmdb_parent: process.env.CMDB_PARENT || 'cmdb_ci_server',
 };
 
 export function getStepTestConfigForStep(
