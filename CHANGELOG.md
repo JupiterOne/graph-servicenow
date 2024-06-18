@@ -1,3 +1,15 @@
+# v1.4.0 (Tue Jun 18 2024)
+
+#### 🚀 Enhancement
+
+- Make servicenow faster - more resilient [#51](https://github.com/JupiterOne/graph-servicenow/pull/51) ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v1.3.1 (Wed Apr 17 2024)
 
 #### 🐛 Bug Fix
