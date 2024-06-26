@@ -21,7 +21,7 @@ exports[`createCMDBEntity that properties are converted correctly 1`] = `
   "businessUnit": undefined,
   "category": undefined,
   "correlationId": undefined,
-  "createdOn": 1554520152000,
+  "createdOn": 1554498552000,
   "displayName": "test-name",
   "environment": undefined,
   "id": "test-id",
@@ -46,7 +46,7 @@ exports[`createCMDBEntity that properties are converted correctly 1`] = `
   "u-custom-boolean": true,
   "u-custom-number": 234,
   "u-custom-object": "{"a":"a","b":"b","c":123}",
-  "updatedOn": 1586142552000,
+  "updatedOn": 1586120952000,
   "warrantyExpiration": undefined,
 }
 `;
