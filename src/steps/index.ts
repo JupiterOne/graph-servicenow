@@ -99,7 +99,7 @@ export async function buildGroupUserRelationships(
   const client = new ServiceNowClient(instance.config, logger);
 
   await client.iterateGroupMembers(async (groupMember) => {
-    if (!groupMember.group.value || !groupMember.user.value) return;
+    if (!groupMember?.group?.value || !groupMember?.user?.value) return;
     if (
       !jobState.hasKey(
         `${groupMember.group.value}|has|${groupMember.user.value}`,
@@ -120,11 +120,19 @@ export async function fetchIncidents(
   const client = new ServiceNowClient(instance.config, logger);
 
   await client.iterateIncidents(async (incident) => {
-    await jobState.addEntity(createIncidentEntity(incident));
+    const incidentEntity = createIncidentEntity(incident);
+    if (!jobState.hasKey(incidentEntity._key)) {
+      await jobState.addEntity(incidentEntity);
 
-    if (incident.assigned_to) {
-      await jobState.addRelationship(
-        createIncidentAssigneeRelationship(incident),
+      if (incident.assigned_to) {
+        await jobState.addRelationship(
+          createIncidentAssigneeRelationship(incident),
+        );
+      }
+    } else {
+      logger.info(
+        { incidentKey: incidentEntity._key },
+        'Found duplicated key for Incident',
       );
     }
   });
