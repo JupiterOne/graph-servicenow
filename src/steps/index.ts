@@ -122,7 +122,7 @@ export async function fetchIncidents(
   await client.iterateIncidents(async (incident) => {
     const incidentEntity = createIncidentEntity(incident);
     if (!jobState.hasKey(incidentEntity._key)) {
-      await jobState.addEntity(createIncidentEntity(incident));
+      await jobState.addEntity(incidentEntity);
 
       if (incident.assigned_to) {
         await jobState.addRelationship(
