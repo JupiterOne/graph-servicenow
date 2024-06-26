@@ -25,7 +25,7 @@ export function createCMDBEntity(
 
       let finalValue = value;
       if (typeof value == 'object') {
-        // Only stringify if value is an object to avoid double quotes around values.
+        // Only stringify if value is an object to avoid double quotes around primitive values.
         finalValue = JSON.stringify(value);
       } else {
         finalValue = value;
