@@ -129,6 +129,11 @@ export async function fetchIncidents(
           createIncidentAssigneeRelationship(incident),
         );
       }
+    } else {
+      logger.info(
+        { incidentKey: incidentEntity._key },
+        'Found duplicated key for Incident',
+      );
     }
   });
 }
