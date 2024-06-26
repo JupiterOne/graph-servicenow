@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createCMDBEntity that properties are converted correctly 1`] = `
+{
+  "_class": [
+    "Configuration",
+  ],
+  "_key": "test-id",
+  "_rawData": [
+    {
+      "name": "default",
+      "rawData": {
+        "uploadStatus": "SKIPPED",
+        "uploadStatusReason": "Raw data currently disabled for this entity type",
+      },
+    },
+  ],
+  "_type": "service_now_cmdb_object",
+  "assignedTo": undefined,
+  "attributes": undefined,
+  "businessUnit": undefined,
+  "category": undefined,
+  "correlationId": undefined,
+  "createdOn": 1554520152000,
+  "displayName": "test-name",
+  "environment": undefined,
+  "id": "test-id",
+  "installStatus": undefined,
+  "ipAddress": undefined,
+  "macAddress": undefined,
+  "managedBy": undefined,
+  "managedByGroup": undefined,
+  "model": undefined,
+  "name": "test-name",
+  "operationalStatus": undefined,
+  "ownedBy": undefined,
+  "serial": undefined,
+  "subcategory": undefined,
+  "sysClassNames": [
+    "fred",
+    "george",
+  ],
+  "test-u-custom-3": "custom 3",
+  "u-custom-1": "custom 1",
+  "u-custom-2": "",
+  "u-custom-boolean": true,
+  "u-custom-number": 234,
+  "u-custom-object": "{"a":"a","b":"b","c":123}",
+  "updatedOn": 1586142552000,
+  "warrantyExpiration": undefined,
+}
+`;
