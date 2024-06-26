@@ -1,3 +1,15 @@
+# v1.4.1 (Wed Jun 26 2024)
+
+#### 🐛 Bug Fix
+
+- Int 11064 incidents & group members [#52](https://github.com/JupiterOne/graph-servicenow/pull/52) ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v1.4.0 (Tue Jun 18 2024)
 
 #### 🚀 Enhancement
