@@ -1,3 +1,15 @@
+# v1.5.0 (Thu Jun 27 2024)
+
+#### 🚀 Enhancement
+
+- Fix CMDB Converter [#53](https://github.com/JupiterOne/graph-servicenow/pull/53) ([@VDubber](https://github.com/VDubber))
+
+#### Authors: 1
+
+- Samuel Poulton ([@VDubber](https://github.com/VDubber))
+
+---
+
 # v1.4.1 (Wed Jun 26 2024)
 
 #### 🐛 Bug Fix
