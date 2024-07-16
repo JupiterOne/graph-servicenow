@@ -30,11 +30,13 @@ export async function fetchCMDB(
     cmdbClasses = instance.config
       .cmdb_parent!.split(',')
       .filter((className) => className != '');
+
     const validationResponse = await validateMultipleClasses(
       client,
       cmdbClasses,
       logger,
     );
+
     if (
       validationResponse.invalidClasses.length > 0 ||
       validationResponse.redundantClasses.length > 0
@@ -45,6 +47,12 @@ export async function fetchCMDB(
           ', ',
         )} are considered redundant. Please update your configuration.`,
       });
+
+      logger.warn(
+        { validationResponse, currentConfig: instance.config.cmdb_parent },
+        'Found redundant classes',
+      );
+
       cmdbClasses = cmdbClasses.filter(
         (className) =>
           !validationResponse.invalidClasses.includes(className) &&
@@ -63,6 +71,7 @@ export async function fetchCMDB(
           resource.sys_class_name,
           ...(await getAllParents(client, resource.sys_class_name, logger)),
         ];
+
         if (!jobState.hasKey(resource.sys_id)) {
           const cmdbEntity = createCMDBEntity(resource, sysClassNames);
           await jobState.addEntity(cmdbEntity);
