@@ -23,10 +23,12 @@ export async function fetchCMDB(
 
   let cmdbClasses: string[] = [];
   if (instance.config.cmdb_parent) {
-    cmdbClasses = instance.config.cmdb_parent!.split(',');
+    cmdbClasses = instance.config
+      .cmdb_parent!.split(',')
+      .filter((className) => className != '');
   }
-
-  for (const parent of cmdbClasses) {
+  for (const className of cmdbClasses) {
+    const parent = className.trim();
     await client.iterateTableResources({
       table: parent,
       limit: 3_000,

@@ -13,7 +13,8 @@ export async function validateMultipleClasses(
   const invalidClasses: Set<string> = new Set<string>();
   const redundantClasses: Set<string> = new Set<string>();
   // Store all parents per class.
-  for (const sysClassName of classNames) {
+  for (let sysClassName of classNames) {
+    sysClassName = sysClassName.trim();
     if (parentsPerClass[sysClassName]) {
       redundantClasses.add(sysClassName);
       continue;

@@ -23,7 +23,9 @@ export default async function validateInvocation(
   if (config.cmdb_parent) {
     if (config.cmdb_parent.includes(',')) {
       // Ingest multiple classes
-      const cmdb_parents = config.cmdb_parent.split(',');
+      const cmdb_parents = config.cmdb_parent
+        .split(',')
+        .filter((className) => className != '');
       if (cmdb_parents.length > 10) {
         throw new IntegrationValidationError(
           `This integration only supports up to 10 CMDB classes per instance. Please update config to specify 10 or fewer.`,
