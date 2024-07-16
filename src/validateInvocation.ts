@@ -21,50 +21,27 @@ export default async function validateInvocation(
   await client.validate();
   //Validate CMDB configuration.
   if (config.cmdb_parent) {
-    if (config.cmdb_parent.includes(',')) {
-      // Ingest multiple classes
-      const cmdb_parents = config.cmdb_parent
-        .split(',')
-        .filter((className) => className != '');
-      if (cmdb_parents.length > 10) {
-        throw new IntegrationValidationError(
-          `This integration only supports up to 10 CMDB classes per instance. Please update config to specify 10 or fewer.`,
-        );
-      }
-      const response = await validateMultipleClasses(
-        client,
-        cmdb_parents,
-        context.logger,
+    const cmdb_parents = config.cmdb_parent
+      .split(',')
+      .filter((className) => className != '');
+    if (cmdb_parents.length > 10) {
+      throw new IntegrationValidationError(
+        `This integration only supports up to 10 CMDB classes per instance. Please update config to specify 10 or fewer.`,
       );
+    }
+    const response = await validateMultipleClasses(
+      client,
+      cmdb_parents,
+      context.logger,
+    );
 
-      if (
-        response.invalidClasses.length > 0 ||
-        response.redundantClasses.length > 0
-      ) {
-        let error = 'CMDB classes are incorrect. ';
-        if (response.invalidClasses.length > 0) {
-          error +=
-            'The classes: ' +
-            response.invalidClasses.toString() +
-            " don't exist in your servicenow account. ";
-        }
-        if (response.redundantClasses.length > 0) {
-          error +=
-            'The classes: ' +
-            response.redundantClasses.toString() +
-            ' are redundant, please remove them.';
-        }
-        throw new IntegrationValidationError(error);
-      }
-    } else {
-      //Ingest only one class
-      try {
-        await client.validateCMDBParent(config.cmdb_parent);
-      } catch (error) {
-        throw new IntegrationValidationError(
-          `Config requires the input of a valid CMDB class. ${error.message}`,
-        );
-      }
+    if (response.invalidClasses.length > 0) {
+      throw new IntegrationValidationError(
+        'CMDB classes are incorrect. ' +
+          'The classes: ' +
+          response.invalidClasses.join(', ') +
+          " don't exist in your servicenow account. ",
+      );
     }
   }
 }

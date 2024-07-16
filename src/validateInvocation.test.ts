@@ -111,7 +111,7 @@ describe('recordings', () => {
     expect(response).toBeUndefined();
   });
 
-  test('When cmdb parent is invalid', async () => {
+  test('When cmdb class is invalid', async () => {
     recording = setupServiceNowRecording({
       directory: __dirname,
       name: 'validateInvocationPassesWithBadCMDBParent',
@@ -122,7 +122,7 @@ describe('recordings', () => {
 
     const executionContext = createMockExecutionContext<IntegrationConfig>({
       instanceConfig: {
-        ...createTestConfig('dev122002.service-now.com'),
+        ...createTestConfig('dev215226.service-now.com'),
         cmdb_parent: 'invalid-parent',
       },
     });
@@ -130,7 +130,30 @@ describe('recordings', () => {
     await expect(async () => {
       await validateInvocation(executionContext);
     }).rejects.toThrow(
-      'Config requires the input of a valid CMDB parent. Request failed with status code 400',
+      "CMDB classes are incorrect. The classes: invalid-parent don't exist in your servicenow account. ",
+    );
+  });
+
+  test('When cmdb classes are  invalid', async () => {
+    recording = setupServiceNowRecording({
+      directory: __dirname,
+      name: 'validateInvocationPassesWithBadCMDBClasses',
+      options: {
+        recordFailedRequests: true,
+      },
+    });
+
+    const executionContext = createMockExecutionContext<IntegrationConfig>({
+      instanceConfig: {
+        ...createTestConfig('dev215226.service-now.com'),
+        cmdb_parent: 'invalid-parent1,cmdb_ci_computer,cmdb_ci',
+      },
+    });
+
+    await expect(async () => {
+      await validateInvocation(executionContext);
+    }).rejects.toThrow(
+      "CMDB classes are incorrect. The classes: invalid-parent1 don't exist in your servicenow account. ",
     );
   });
 });
