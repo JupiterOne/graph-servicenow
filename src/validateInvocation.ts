@@ -5,7 +5,7 @@ import {
 
 import { ServiceNowClient } from './client';
 import { IntegrationConfig } from './types';
-import { validateMultipleClasses } from './util/validateMultipleClasses';
+import { validateMultipleClasses } from './util/cmdbHierarchyUtils';
 
 export default async function validateInvocation(
   context: IntegrationExecutionContext<IntegrationConfig>,
@@ -26,7 +26,7 @@ export default async function validateInvocation(
       const cmdb_parents = config.cmdb_parent.split(',');
       if (cmdb_parents.length > 10) {
         throw new IntegrationValidationError(
-          `This integration only supports up to 10 CMDB classes per instance.`,
+          `This integration only supports up to 10 CMDB classes per instance. Please update config to specify 10 or fewer.`,
         );
       }
       const response = await validateMultipleClasses(
@@ -60,7 +60,7 @@ export default async function validateInvocation(
         await client.validateCMDBParent(config.cmdb_parent);
       } catch (error) {
         throw new IntegrationValidationError(
-          `Config requires the input of a valid CMDB parent. ${error.message}`,
+          `Config requires the input of a valid CMDB class. ${error.message}`,
         );
       }
     }

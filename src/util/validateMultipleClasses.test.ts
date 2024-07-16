@@ -5,7 +5,7 @@ import {
 import { configFromEnv } from '../../test/util/createTestConfig';
 import { setupServiceNowRecording } from '../../test/util/recording';
 import { ServiceNowClient } from '../client';
-import { validateMultipleClasses } from './validateMultipleClasses';
+import { validateMultipleClasses } from './cmdbHierarchyUtils';
 
 let recording: Recording;
 

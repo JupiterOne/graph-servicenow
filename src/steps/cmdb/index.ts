@@ -13,22 +13,20 @@ import {
   Steps,
 } from '../../constants';
 import { createCMDBEntity } from './converters';
-import { getAllParents } from '../../util/validateMultipleClasses';
+import { getAllParents } from '../../util/cmdbHierarchyUtils';
 
 export async function fetchCMDB(
   context: IntegrationStepExecutionContext<IntegrationConfig>,
 ) {
   const { logger, instance, jobState } = context;
   const client = new ServiceNowClient(instance.config, logger);
-  let parents: string[] = [];
 
-  if (instance.config.cmdb_parent!.includes(',')) {
-    parents = instance.config.cmdb_parent!.split(',');
-  } else {
-    parents = [instance.config.cmdb_parent!];
+  let cmdbClasses: string[] = [];
+  if (instance.config.cmdb_parent) {
+    cmdbClasses = instance.config.cmdb_parent!.split(',');
   }
 
-  for (const parent of parents) {
+  for (const parent of cmdbClasses) {
     await client.iterateTableResources({
       table: parent,
       limit: 3_000,

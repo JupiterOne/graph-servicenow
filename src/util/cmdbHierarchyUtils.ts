@@ -28,7 +28,7 @@ export async function validateMultipleClasses(
       parentsPerClass[sysClassName].push(classToSearch!);
     }
   }
-
+  // Find redundant classes.
   for (const sysClasses of Object.entries(parentsPerClass)) {
     for (const sysClass of sysClasses[1]) {
       if (parentsPerClass[sysClass]) {
