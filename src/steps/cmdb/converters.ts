@@ -6,6 +6,7 @@ import {
 import { Entities } from '../../constants';
 import { CMDBItem } from '../../types';
 import { skippedRawDataSource } from '../../util/graphObject';
+import { camelCase } from 'lodash';
 
 export function createCMDBEntity(
   data: CMDBItem,
@@ -16,7 +17,7 @@ export function createCMDBEntity(
   for (const [key, value] of Object.entries(data)) {
     //custom fields
     if (key.startsWith('u_') || key.includes('_u_')) {
-      const customFieldsKey = key.split('_').join('-');
+      const customFieldsKey = camelCase(key);
 
       // Don't include undefined/null values
       if (value === undefined || value === null) {
