@@ -130,7 +130,7 @@ describe('recordings', () => {
     await expect(async () => {
       await validateInvocation(executionContext);
     }).rejects.toThrow(
-      "CMDB classes are incorrect. The classes: invalid-parent don't exist in your servicenow account. ",
+      "CMDB classes are incorrect. The class(es): invalid-parent don't exist in your ServiceNow account. ",
     );
   });
 
@@ -153,7 +153,7 @@ describe('recordings', () => {
     await expect(async () => {
       await validateInvocation(executionContext);
     }).rejects.toThrow(
-      "CMDB classes are incorrect. The classes: invalid-parent1 don't exist in your servicenow account. ",
+      "CMDB classes are incorrect. The class(es): invalid-parent1 don't exist in your ServiceNow account. ",
     );
   });
 });
