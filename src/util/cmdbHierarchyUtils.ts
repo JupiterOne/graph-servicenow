@@ -1,4 +1,7 @@
-import { IntegrationLogger } from '@jupiterone/integration-sdk-core';
+import {
+  IntegrationInfoEventName,
+  IntegrationLogger,
+} from '@jupiterone/integration-sdk-core';
 import { ServiceNowClient, ServiceNowTable } from '../client';
 import { PaginatedResponse, ServiceNowDatabaseTable } from '../types';
 
@@ -52,7 +55,7 @@ async function getParentClass(
     PaginatedResponse<ServiceNowDatabaseTable>
   >({
     table: ServiceNowTable.SYS_DICTIONARY,
-    query: { name: sysClassName, sysparm_fields: 'super_class,name' },
+    query: { name: sysClassName },
   });
   try {
     if (
@@ -70,49 +73,35 @@ async function getParentClass(
     throw error;
   }
 }
+
+/**
+ * Used to store a cache of the parents of each class
+ */
 const SysClassNamesParents: {
   [key: string]: string;
-} = {}; //Used to store a cache of the parents of each class
+} = {};
 
+/**
+ *   This functions fetches the parents until the root of the tree. If it is stored in the cache we avoid calling the endpoint.
+ */
 export async function getAllParents(
   client: ServiceNowClient,
   sysClassName: string,
   logger: IntegrationLogger,
 ): Promise<string[]> {
-  //This functions fetches the parents until the root of the tree. If it is stored in the cache
-  //we avoid calling the endpoint.
+  //Stopping point
   if (sysClassName == 'cmdb_ci') {
     return [];
   }
+  //We look for the parent of the class
   if (!SysClassNamesParents[sysClassName]) {
-    const dictionariesPaginatedResponse: PaginatedResponse<ServiceNowDatabaseTable> = await client.fetchTableResource<
-      PaginatedResponse<ServiceNowDatabaseTable>
-    >({
-      table: ServiceNowTable.SYS_DICTIONARY,
-      query: { name: sysClassName, sysparm_fields: 'super_class,name' },
-    });
-    try {
-      if (
-        dictionariesPaginatedResponse?.result &&
-        dictionariesPaginatedResponse.result.length > 0
-      ) {
-        const dictionaryClass = dictionariesPaginatedResponse.result[0];
-        const newParent = await client.retryResourceRequest<
-          ServiceNowDatabaseTable
-        >(
-          `${dictionaryClass.super_class.link}?sysparm_fields=super_class,name`,
-        );
-        SysClassNamesParents[dictionaryClass.name] = newParent.name;
-      }
-    } catch (error) {
-      logger.error({ error }, 'Could not find super class');
-      return [];
-    }
+    SysClassNamesParents[sysClassName] = (await getParentClass(
+      client,
+      sysClassName,
+      logger,
+    )) as string;
   }
-  if (!SysClassNamesParents[sysClassName]) {
-    logger.error({ sysClassName }, 'Could not find super class');
-    return [];
-  }
+  //We return the parent 'SysClassNamesParents[sysClassName]' and the result of looking for its parent.
   return [
     SysClassNamesParents[sysClassName],
     ...(await getAllParents(
@@ -121,4 +110,44 @@ export async function getAllParents(
       logger,
     )),
   ];
+}
+export function getParsedCMDBClassList(cmbdClassList: string) {
+  return cmbdClassList!.split(',').filter((className) => className != '');
+}
+
+export async function getValidClasses(
+  client: ServiceNowClient,
+  cmdbClasses: string[],
+  logger: IntegrationLogger,
+  currentConfig: string | undefined,
+) {
+  const validationResponse = await validateMultipleClasses(
+    client,
+    cmdbClasses,
+    logger,
+  );
+
+  if (
+    validationResponse.invalidClasses.length > 0 ||
+    validationResponse.redundantClasses.length > 0
+  ) {
+    logger.publishInfoEvent({
+      name: IntegrationInfoEventName.Info,
+      description: `The classes: ${validationResponse.redundantClasses.join(
+        ', ',
+      )} are considered redundant. Please remove child class(es) in the configuration to fix this message.`,
+    });
+
+    logger.warn(
+      { validationResponse, currentConfig: currentConfig },
+      'Found redundant classes',
+    );
+
+    cmdbClasses = cmdbClasses.filter(
+      (className) =>
+        !validationResponse.invalidClasses.includes(className) &&
+        !validationResponse.redundantClasses.includes(className),
+    );
+  }
+  return cmdbClasses;
 }

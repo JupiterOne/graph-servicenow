@@ -1,6 +1,5 @@
 import {
   IntegrationStepExecutionContext,
-  IntegrationWarnEventName,
   RelationshipClass,
   Step,
   createDirectRelationship,
@@ -16,7 +15,8 @@ import {
 import { createCMDBEntity } from './converters';
 import {
   getAllParents,
-  validateMultipleClasses,
+  getParsedCMDBClassList,
+  getValidClasses,
 } from '../../util/cmdbHierarchyUtils';
 
 export async function fetchCMDB(
@@ -27,38 +27,13 @@ export async function fetchCMDB(
 
   let cmdbClasses: string[] = [];
   if (instance.config.cmdb_parent) {
-    cmdbClasses = instance.config
-      .cmdb_parent!.split(',')
-      .filter((className) => className != '');
-
-    const validationResponse = await validateMultipleClasses(
+    cmdbClasses = getParsedCMDBClassList(instance.config.cmdb_parent!);
+    cmdbClasses = await getValidClasses(
       client,
       cmdbClasses,
       logger,
+      instance.config.cmdb_parent!,
     );
-
-    if (
-      validationResponse.invalidClasses.length > 0 ||
-      validationResponse.redundantClasses.length > 0
-    ) {
-      logger.publishWarnEvent({
-        name: IntegrationWarnEventName.IngestionLimitEncountered,
-        description: `The classes: ${validationResponse.redundantClasses.join(
-          ', ',
-        )} are considered redundant. Please update your configuration.`,
-      });
-
-      logger.warn(
-        { validationResponse, currentConfig: instance.config.cmdb_parent },
-        'Found redundant classes',
-      );
-
-      cmdbClasses = cmdbClasses.filter(
-        (className) =>
-          !validationResponse.invalidClasses.includes(className) &&
-          !validationResponse.redundantClasses.includes(className),
-      );
-    }
   }
 
   for (const className of cmdbClasses) {
