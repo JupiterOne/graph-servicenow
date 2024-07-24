@@ -1,15 +1,3 @@
-# v1.6.0 (Wed Jul 24 2024)
-
-#### 🚀 Enhancement
-
-- Added ingestion of multiple cmdb classes [#54](https://github.com/JupiterOne/graph-servicenow/pull/54) ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
-
-#### Authors: 1
-
-- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
-
----
-
 # v1.6.0 (Fri Jul 19 2024)
 
 #### 🚀 Enhancement
