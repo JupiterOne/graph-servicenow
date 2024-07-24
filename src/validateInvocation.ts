@@ -5,6 +5,10 @@ import {
 
 import { ServiceNowClient } from './client';
 import { IntegrationConfig } from './types';
+import {
+  getParsedCMDBClassList,
+  validateMultipleClasses,
+} from './util/cmdbHierarchyUtils';
 
 export default async function validateInvocation(
   context: IntegrationExecutionContext<IntegrationConfig>,
@@ -18,12 +22,26 @@ export default async function validateInvocation(
 
   const client = new ServiceNowClient(config, context.logger);
   await client.validate();
+  //Validate CMDB configuration.
   if (config.cmdb_parent) {
-    try {
-      await client.validateCMDBParent(config.cmdb_parent);
-    } catch (error) {
+    const cmdb_parents = getParsedCMDBClassList(config.cmdb_parent);
+    if (cmdb_parents.length > 10) {
       throw new IntegrationValidationError(
-        `Config requires the input of a valid CMDB parent. ${error.message}`,
+        `This integration only supports up to 10 CMDB classes per instance. Please update config to specify 10 or fewer.`,
+      );
+    }
+    const response = await validateMultipleClasses(
+      client,
+      cmdb_parents,
+      context.logger,
+    );
+
+    if (response.invalidClasses.length > 0) {
+      throw new IntegrationValidationError(
+        'CMDB classes are incorrect. ' +
+          'The class(es): ' +
+          response.invalidClasses.join(', ') +
+          " don't exist in your ServiceNow account. ",
       );
     }
   }
