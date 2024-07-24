@@ -1,3 +1,29 @@
+# v1.6.0 (Wed Jul 24 2024)
+
+#### 🚀 Enhancement
+
+- Added ingestion of multiple cmdb classes [#54](https://github.com/JupiterOne/graph-servicenow/pull/54) ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
+# v1.6.0 (Fri Jul 19 2024)
+
+#### 🚀 Enhancement
+
+- Allow ingestion of multiple classes.
+- Added validation to the classes and specific error handling/messaging to inform about invalid classes.
+- Added logic to avoid the ingestion of redundant classes.
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v1.5.0 (Thu Jun 27 2024)
 
 #### 🚀 Enhancement

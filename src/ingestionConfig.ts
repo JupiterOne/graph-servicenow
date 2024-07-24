@@ -13,6 +13,6 @@ export const ingestionConfig: IntegrationIngestionConfigFieldMap = {
   [IngestionSources.CMDB_ITEMS]: {
     title: 'CMBD Items',
     description:
-      'Fetch CMDB items from configured "cmdb_parent" table and their relationships with groups and users',
+      'Fetch CMDB items from configured "cmdb_class" and their relationships with groups and users',
   },
 };
