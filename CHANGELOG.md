@@ -1,3 +1,15 @@
+# v2.0.0 (Wed Jul 24 2024)
+
+#### 💥 Breaking Change
+
+- Custom Field Casing [#55](https://github.com/JupiterOne/graph-servicenow/pull/55) ([@VDubber](https://github.com/VDubber))
+
+#### Authors: 1
+
+- Samuel Poulton ([@VDubber](https://github.com/VDubber))
+
+---
+
 # v1.6.0 (Fri Jul 19 2024)
 
 #### 🚀 Enhancement
