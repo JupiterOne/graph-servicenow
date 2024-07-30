@@ -44,7 +44,7 @@ export default async function validateInvocation(
     );
   }
 
-  if (response.invalidClasses.length > 0) {
+  if (response?.invalidClasses?.length > 0) {
     throw new IntegrationValidationError(
       'CMDB classes are incorrect. ' +
         'The class(es): ' +
