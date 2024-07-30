@@ -69,7 +69,10 @@ async function getParentClass(
       return newParent.name;
     }
   } catch (error) {
-    logger.error({ error }, 'Could not find super class');
+    logger.error(
+      { err: error, result: dictionariesPaginatedResponse.result },
+      'Could not find super class',
+    );
     throw error;
   }
 }
