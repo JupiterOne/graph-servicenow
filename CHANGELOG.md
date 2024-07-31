@@ -1,3 +1,15 @@
+# v2.0.2 (Wed Jul 31 2024)
+
+#### 🐛 Bug Fix
+
+- Added error logging [#57](https://github.com/JupiterOne/graph-servicenow/pull/57) ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v2.0.1 (Tue Jul 30 2024)
 
 #### 🐛 Bug Fix
