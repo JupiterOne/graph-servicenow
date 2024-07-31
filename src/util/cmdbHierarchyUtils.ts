@@ -70,7 +70,7 @@ async function getParentClass(
     }
   } catch (error) {
     logger.error(
-      { err: error, result: dictionariesPaginatedResponse.result },
+      { err: error, res: dictionariesPaginatedResponse },
       'Could not find super class',
     );
     throw error;
