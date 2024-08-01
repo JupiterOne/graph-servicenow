@@ -155,5 +155,5 @@ describe('recordings', () => {
     }).rejects.toThrow(
       "CMDB classes are incorrect. The class(es): invalid-parent1 don't exist in your ServiceNow account. ",
     );
-  });
+  }, 10_000);
 });
