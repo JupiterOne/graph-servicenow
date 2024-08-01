@@ -55,7 +55,7 @@ async function getParentClass(
     PaginatedResponse<ServiceNowDatabaseTable>
   >({
     table: ServiceNowTable.SYS_DICTIONARY,
-    query: { name: sysClassName },
+    query: { name: sysClassName, sysparm_fields: 'super_class,name' },
   });
   try {
     if (
@@ -70,7 +70,7 @@ async function getParentClass(
     }
   } catch (error) {
     logger.error(
-      { err: error, res: dictionariesPaginatedResponse },
+      { err: error, sysDbQueryResponseData: dictionariesPaginatedResponse },
       'Could not find super class',
     );
     throw error;
