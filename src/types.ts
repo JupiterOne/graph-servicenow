@@ -45,7 +45,7 @@ export type CMDBItem = {
   owned_by: Asset | undefined;
   checked_out: string;
   sys_domain_path: string;
-  business_unit: string;
+  business_unit: Asset | undefined;
   delivery_date: string;
   maintenance_schedule: string;
   install_status: string;
@@ -66,7 +66,7 @@ export type CMDBItem = {
   last_discovered: string;
   sys_class_name: string;
   manufacturer: Asset | undefined;
-  sys_id: string;
+  sys_id: string | undefined;
   po_number: string;
   checked_in: string;
   sys_class_path: string;
