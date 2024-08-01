@@ -1,3 +1,15 @@
+# v2.1.0 (Thu Aug 01 2024)
+
+#### 🚀 Enhancement
+
+- Fix link issue [#60](https://github.com/JupiterOne/graph-servicenow/pull/60) ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v2.0.4 (Thu Aug 01 2024)
 
 #### 🐛 Bug Fix
