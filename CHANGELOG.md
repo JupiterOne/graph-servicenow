@@ -1,3 +1,15 @@
+# v2.0.3 (Thu Aug 01 2024)
+
+#### 🐛 Bug Fix
+
+- Int 11375 return superclass [#58](https://github.com/JupiterOne/graph-servicenow/pull/58) ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v2.0.2 (Wed Jul 31 2024)
 
 #### 🐛 Bug Fix
