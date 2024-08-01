@@ -27,6 +27,7 @@ exports[`createCMDBEntity that properties are converted correctly 1`] = `
   "id": "test-id",
   "installStatus": undefined,
   "ipAddress": undefined,
+  "isSysIdUndefined": false,
   "macAddress": undefined,
   "managedBy": undefined,
   "managedByGroup": undefined,

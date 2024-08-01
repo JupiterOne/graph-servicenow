@@ -7,6 +7,7 @@ import { Entities } from '../../constants';
 import { CMDBItem } from '../../types';
 import { skippedRawDataSource } from '../../util/graphObject';
 import { camelCase } from 'lodash';
+import { createHash } from 'crypto';
 
 export function createCMDBEntity(
   data: CMDBItem,
@@ -35,6 +36,13 @@ export function createCMDBEntity(
       customFields[customFieldsKey] = finalValue;
     }
   }
+  // Sys_id could be undefined this should be a case of currupted or deleted data, using sha1 to have a uniquekey for the cmdb objects
+  let objectKey = data.sys_id;
+  if (!objectKey) {
+    const hash = createHash('sha1');
+    hash.update(JSON.stringify(data));
+    objectKey = hash.digest('base64');
+  }
 
   return createIntegrationEntity({
     entityData: {
@@ -42,15 +50,16 @@ export function createCMDBEntity(
       assign: {
         _class: Entities.CMDB_OBJECT._class,
         _type: Entities.CMDB_OBJECT._type,
-        _key: data.sys_id,
+        _key: objectKey,
         id: data.sys_id,
+        isSysIdUndefined: !data.sys_id,
         correlationId: data.correlation_id,
         name: data.name,
         displayName: data.name,
         sysClassNames: sysClassNames,
         installStatus: data.install_status,
         attributes: data.attributes,
-        businessUnit: data.business_unit,
+        businessUnit: data.business_unit?.value,
         category: data.category,
         environment: data.environment,
         ipAddress: data.ip_address,
