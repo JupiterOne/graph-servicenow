@@ -81,7 +81,7 @@ and assigning that read-only role to a dedicated ServiceNow user.
    **2. Access Control Rule (ACL)** : `Type:Record` , `Operation:Create` ,
    `Name(table):incident` , `Role:jupiterone_incident_creator`
 
-   **4. Role Assignment**: Assign `jupiterone_incident_creator` role to
+   **3. Role Assignment**: Assign `jupiterone_incident_creator` role to
    `JupiterOne` user
 
 ## In JupiterOne
