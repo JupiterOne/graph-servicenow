@@ -24,12 +24,16 @@ export async function validateMultipleClasses(
     }
     parentsPerClass[sysClassName] = [];
     let classToSearch: string | undefined = sysClassName;
-    while (classToSearch! && classToSearch != 'cmdb_ci') {
-      classToSearch = await getParentClass(client, classToSearch, logger);
-      if (!classToSearch) {
+    while (classToSearch) {
+      try {
+        classToSearch = await getParentClass(client, classToSearch, logger);
+        if (classToSearch) {
+          parentsPerClass[sysClassName].push(classToSearch);
+        }
+      } catch (error) {
         invalidClasses.add(sysClassName);
+        classToSearch = undefined;
       }
-      parentsPerClass[sysClassName].push(classToSearch!);
     }
   }
   // Find redundant classes.
@@ -63,10 +67,16 @@ async function getParentClass(
       dictionariesPaginatedResponse.result.length > 0
     ) {
       const dictionaryClass = dictionariesPaginatedResponse.result[0];
-      const newParent = await client.retryResourceRequest<
-        ServiceNowDatabaseTable
-      >(`${dictionaryClass.super_class.link}?sysparm_fields=super_class,name`);
-      return newParent.name;
+      if (dictionaryClass.super_class) {
+        const newParent = await client.retryResourceRequest<
+          ServiceNowDatabaseTable
+        >(
+          `${dictionaryClass.super_class.link}?sysparm_fields=super_class,name`,
+        );
+        return newParent.name;
+      }
+    } else {
+      throw new Error('Could not find parent');
     }
   } catch (error) {
     logger.error(
@@ -96,17 +106,19 @@ export async function getAllParents(
   sysClassName: string,
   logger: IntegrationLogger,
 ): Promise<string[]> {
-  //Stopping point
-  if (sysClassName == 'cmdb_ci') {
+  if (SysClassNamesParents[sysClassName] == sysClassName) {
+    //No more parents
     return [];
   }
   //We look for the parent of the class
   if (!SysClassNamesParents[sysClassName]) {
-    SysClassNamesParents[sysClassName] = (await getParentClass(
-      client,
-      sysClassName,
-      logger,
-    )) as string;
+    const parent = await getParentClass(client, sysClassName, logger);
+    if (parent) {
+      SysClassNamesParents[sysClassName] = parent as string;
+    } else {
+      SysClassNamesParents[sysClassName] = sysClassName;
+      return []; //No further parents
+    }
   }
   //We return the parent 'SysClassNamesParents[sysClassName]' and the result of looking for its parent.
   return [
