@@ -47,8 +47,9 @@ export async function fetchCMDB(
           ...(await getAllParents(client, resource.sys_class_name, logger)),
         ];
 
-        if (!jobState.hasKey(resource.sys_id)) {
-          const cmdbEntity = createCMDBEntity(resource, sysClassNames);
+        const cmdbEntity = createCMDBEntity(resource, sysClassNames);
+
+        if (!jobState.hasKey(cmdbEntity._key)) {
           await jobState.addEntity(cmdbEntity);
 
           if (
