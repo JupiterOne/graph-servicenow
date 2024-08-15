@@ -1,3 +1,15 @@
+# v2.1.2 (Thu Aug 15 2024)
+
+#### 🐛 Bug Fix
+
+- INT-11441: fix JSON parse issue [#63](https://github.com/JupiterOne/graph-servicenow/pull/63) ([@gastonyelmini](https://github.com/gastonyelmini))
+
+#### Authors: 1
+
+- Gaston Yelmini ([@gastonyelmini](https://github.com/gastonyelmini))
+
+---
+
 # v2.1.1 (Thu Aug 01 2024)
 
 #### 🐛 Bug Fix
