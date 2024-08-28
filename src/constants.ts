@@ -39,6 +39,9 @@ export const Entities = {
     _type: 'service_now_incident',
     _class: 'Incident',
     disableClassMatch: true,
+    indexMetadata: {
+      enabled: false,
+    },
   },
   CMDB_OBJECT: {
     resourceName: 'CMDB Object',

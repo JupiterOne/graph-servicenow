@@ -47,7 +47,11 @@ export async function fetchUsers(
     return;
   }
   await client.iterateUsers(async (user) => {
-    const userEntity = await jobState.addEntity(createUserEntity(user));
+    const userEntity = createUserEntity(user);
+    if (jobState.hasKey(userEntity._key)) {
+      return;
+    }
+    await jobState.addEntity(userEntity);
 
     await jobState.addRelationship(
       createDirectRelationship({
