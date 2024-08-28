@@ -1,3 +1,15 @@
+# v2.2.0 (Wed Aug 28 2024)
+
+#### 🚀 Enhancement
+
+- Duplicated key for the user. Remove metadata from incidents [#64](https://github.com/JupiterOne/graph-servicenow/pull/64) ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+#### Authors: 1
+
+- Gonzalo Avalos Ribas ([@Gonzalo-Avalos-Ribas](https://github.com/Gonzalo-Avalos-Ribas))
+
+---
+
 # v2.1.2 (Thu Aug 15 2024)
 
 #### 🐛 Bug Fix
